@@ -6,5 +6,5 @@ void printRanking();
 int printStartMenu();
 void mainGame();
 void CursorView(char);
-void setCursorPos(int, int);
+void gotoxy(int, int);
 void printRanking();

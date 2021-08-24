@@ -21,6 +21,8 @@ void printScript() {
 	printf("젤리의 크기에 따라 점수가 달라집니다. \n");
 	printf("닉네임을 입력하고 시작화면에서 3번을 눌러 랭킹을 확인해보세요!\n\n\n\n\n\n\n\n\n");
 	printf("<< 뒤로 가려면 [ESC] 키를 눌러주세요...    ");
-	key = _getch();
-	if (key == 27) return;
+	while (true) {
+		key = _getch();
+		if (key == 27) return;
+	}
 }
