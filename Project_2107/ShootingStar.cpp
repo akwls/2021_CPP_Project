@@ -2,10 +2,6 @@
 #include <Windows.h>
 #include <conio.h>
 #include "shooting_star.h"
-#define LEFT   75      // 좌측방향키 
-#define RIGHT  77      // 우측방향키 
-#define UP     72      // 위쪽방향키 
-#define DOWN   80      // 아래방향키
 using namespace std;
 
 /*
@@ -26,6 +22,7 @@ public:
 
 int main() {
 	system("mode con cols=100 lines=50 | title Shooting Star★!!!!");
+	srand((unsigned int)time(NULL));
 	
 	while (true) {
 		switch (printStartMenu()) {

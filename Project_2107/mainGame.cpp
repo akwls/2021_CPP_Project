@@ -4,18 +4,37 @@
 #include <thread>
 #include "shooting_star.h"
 using namespace std;
+#define LEFT   75      // 좌측방향키 
+#define RIGHT  77      // 우측방향키 
+#define UP     72      // 위쪽방향키 
+#define DOWN   80      // 아래방향키
+// 12 => RED
+// 15 => WHITE
+// 6 => DARK YELLOW
+
+/*
+class Monster {
+public:
+	int kill[3] = { 10, 15, 20 };
+	string shape[3] = { "■■\n■■", "■■■\n■■■\n■■■", "■■■■■\n■■■■■\n■■■■■\n■■■■■\n■■■■■" };
+	Monster() {
+
+	}
+};
+*/
 
 void mainGame() {
 	gotoxy(92, 1);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-	printf("♥♥♥");
+	printf("♥ ♥ ♥");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	int x = 44, y = 40, i = 0;
 	CursorView(0);
-	char key;
+	char key = 0;
 	gotoxy(x, y);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 	printf("▶◎◀");
+	// Monster monster;
 
 	do {
 		key = _getch();
@@ -29,6 +48,11 @@ void mainGame() {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("▶◎◀");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+				for (int i = y-1; i >=0; i--) {
+					gotoxy(x, i);
+					cout << " ★  ";
+					// Sleep(1);
+				}
 			}
 			break;
 		case 75:
@@ -40,10 +64,15 @@ void mainGame() {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("▶◎◀");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+				for (int i = y-1; i >= 0; i--) {
+					gotoxy(x, i);
+					cout << " ★  ";
+					// Sleep(1);
+				}
 			}
 			break;
 		}
-	} while (key != 27);//ESC =27
+	} while (key != 27); //ESC = 27
 	CursorView(1);
 	return;
 }
