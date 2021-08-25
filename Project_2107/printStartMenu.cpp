@@ -6,18 +6,21 @@ using namespace std;
 
 int printStartMenu() {
 	system("cls");
-	cout << endl << endl << endl << endl << endl;
-	cout << "		 #####  #    #   ####   ####  ##### ##### #####  #   #   #### " << endl;
-	cout << "		#       #    #  #    # #    #   #     #     #    ##  #  #     " << endl;
-	cout << "		 #####  ######  #    # #    #   #     #     #    # # #  #  ###" << endl;
-	cout << "		      # #    #  #    # #    #   #     #     #    #  ##  #    #" << endl;
-	cout << "		 #####  #    #   ####   ####    #     #   #####  #   #   #### " << endl;
-	cout << "																	  " << endl;
-	cout << "			           #####  #####   ####    ####                    " << endl;
-	cout << "			          #         #    #    #   #   #                   " << endl;
-	cout << "			           #####    #    ######   #  #                    " << endl;
-	cout << "			                #   #    #    #   #####                   " << endl;
-	cout << "			           #####    #    #    #   #    #                  " << endl;
+	gotoxy(25, 6); cout << " _____  _                    _    _               " << endl;
+	gotoxy(25, 7); cout << "/  ___|| |                  | |  (_)              " << endl;
+	gotoxy(25, 8); cout << "\\ `--. | |__    ___    ___  | |_  _  _ __    __ _ " << endl;
+	gotoxy(25, 9); cout << " `--. \\| '_ \\  / _ \\  / _ \\ | __|| || '_ \\  / _` |" << endl;
+	gotoxy(25, 10); cout << "/\\__/ /| | | || (_) || (_) || |_ | || | | || (_| |" << endl;
+	gotoxy(25, 11); cout << "\\____/ |_| |_| \\___/  \\___/  \\__||_||_| |_| \\__, |" << endl;
+	gotoxy(25, 12); cout << "                                             __/ |" << endl;
+	gotoxy(25, 13); cout << "                                            |___/ " << endl;
+	gotoxy(36, 14); cout << " _____  _                " << endl;
+	gotoxy(36, 15); cout << "/  ___|| |               " << endl;
+	gotoxy(36, 16); cout << "\\ `--. | |_   __ _  _ __ " << endl;
+	gotoxy(36, 17); cout << " `--. \\| __| / _` || '__|" << endl;
+	gotoxy(36, 18); cout << "/\\__/ /| |_ | (_| || |   " << endl;
+	gotoxy(36, 19); cout << "\\____/  \\__| \\__,_||_|   " << endl;
+
 	cout << endl;
 	cout << "					  1. 게임 시작						  " << endl;
 	cout << "					  2. 게임 방법						  " << endl;

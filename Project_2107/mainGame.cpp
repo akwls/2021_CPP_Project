@@ -21,7 +21,7 @@ void mainGame() {
 		key = _getch();
 		switch (key) {
 		case 77:
-			if (x >= 0 && x < 94) {
+			if (x >= 0 && x < 97) {
 				gotoxy(x, y);
 				printf("        ");
 				x += 1;
@@ -32,7 +32,7 @@ void mainGame() {
 			}
 			break;
 		case 75:
-			if (x > 0 && x <= 94) {
+			if (x > 0 && x <= 97) {
 				gotoxy(x, y);
 				printf("        ");
 				x -= 1;
