@@ -12,67 +12,136 @@ using namespace std;
 // 15 => WHITE
 // 6 => DARK YELLOW
 
-/*
-class Monster {
+class Small_Monster {
 public:
-	int kill[3] = { 10, 15, 20 };
-	string shape[3] = { "¡á¡á\n¡á¡á", "¡á¡á¡á\n¡á¡á¡á\n¡á¡á¡á", "¡á¡á¡á¡á¡á\n¡á¡á¡á¡á¡á\n¡á¡á¡á¡á¡á\n¡á¡á¡á¡á¡á\n¡á¡á¡á¡á¡á" };
-	Monster() {
-
+	int x, y;
+	int kill = 10;
+	void setter(int x, int y) {
+		this->x = x;
+		this->y = y;
+	}
+	void print() {
+		gotoxy(this->x, this->y); cout << " ¡á ";
+		//gotoxy(this->x, this->y+1); cout << "¡á¡á¡á";
+		//gotoxy(this->x, this->y+2); cout << "¡á¡á¡á";
+	}
+	~Small_Monster() {
+		gotoxy(this->x, this->y);
+		cout << "     " << endl << "     " << endl << "     ";
 	}
 };
-*/
+
 
 void mainGame() {
+
 	gotoxy(92, 1);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 	printf("¢¾ ¢¾ ¢¾");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-	int x = 44, y = 40, i = 0;
+	int my_x = 44, my_y = 40, i = 0;
 	CursorView(0);
 	char key = 0;
-	gotoxy(x, y);
+	gotoxy(my_x, my_y);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 	printf("¢º¡Ý¢¸");
+	Small_Monster* monster;
+	monster = new Small_Monster[5];
+	for (int i = 0; i < 5; i++) {
+		monster[i].setter(rand() % 61 + 20, rand() % 21 + 1);
+		monster[i].print();
+	}
 	// Monster monster;
 
 	do {
 		key = _getch();
 		switch (key) {
-		case 77:
-			if (x >= 0 && x < 97) {
-				gotoxy(x, y);
+		case RIGHT:
+			if (my_x >= 0 && my_x < 97) {
+				gotoxy(my_x, my_y);
 				printf("        ");
-				x += 1;
-				gotoxy(x, y);
+				my_x += 1;
+				gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("¢º¡Ý¢¸");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-				for (int i = y-1; i >=0; i--) {
-					gotoxy(x, i);
-					cout << " ¡Ú  ";
+				for (int i = my_y - 1; i >= 0; i--) {
+					gotoxy(my_x, i); 
+					for (int j = 0; j < 5; j++) {
+						if (monster[j].x == my_x - 1 && monster[j].y + 1 == i) {
+							i = -1;
+							continue;
+						}
+					}
+					cout << " ";
+				}
+				for (int i = my_y - 1; i >= 0; i--) {
+					gotoxy(my_x+1, i);
+					for (int j = 0; j < 5; j++) {
+						if (monster[j].x == my_x && monster[j].y+1 == i) {
+							i = -1;
+							continue;
+						}
+					}
+					cout << "¡Ú";
 					// Sleep(1);
+				}
+				for (int i = my_y - 1; i >= 0; i--) {
+					gotoxy(my_x + 2, i); 
+					for (int j = 0; j < 5; j++) {
+						if (monster[j].x == my_x + 1 && monster[j].y + 1 == i) {
+							i = -1;
+							continue;
+						}
+					}
+					cout << " ";
 				}
 			}
 			break;
-		case 75:
-			if (x > 0 && x <= 97) {
-				gotoxy(x, y);
+		case LEFT:
+			if (my_x > 0 && my_x <= 97) {
+				gotoxy(my_x, my_y);
 				printf("        ");
-				x -= 1;
-				gotoxy(x, y);
+				my_x -= 1;
+				gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("¢º¡Ý¢¸");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-				for (int i = y-1; i >= 0; i--) {
-					gotoxy(x, i);
-					cout << " ¡Ú  ";
+				for (int i = my_y - 1; i >= 0; i--) {
+					gotoxy(my_x, i); 
+					for (int j = 0; j < 5; j++) {
+						if (monster[j].x == my_x-1 && monster[j].y + 1 == i) {
+							i = -1;
+							continue;
+						}
+					}
+					cout << " ";
+				}
+				for (int i = my_y - 1; i >= 0; i--) {
+					gotoxy(my_x+1, i);
+					for (int j = 0; j < 5; j++) {
+						if (monster[j].x == my_x && monster[j].y +1 == i) {
+							i = -1;
+							continue;
+						}
+					}
+					cout << "¡Ú";
 					// Sleep(1);
+				}
+				for (int i = my_y - 1; i >= 0; i--) {
+					gotoxy(my_x+2, i);
+					for (int j = 0; j < 5; j++) {
+						if (monster[j].x == my_x + 1 && monster[j].y + 1 == i) {
+							i = -1;
+							continue;
+						}
+					}
+					cout << " ";
 				}
 			}
 			break;
 		}
 	} while (key != 27); //ESC = 27
 	CursorView(1);
+	delete[] monster;
 	return;
 }
