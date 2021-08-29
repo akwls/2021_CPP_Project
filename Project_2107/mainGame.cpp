@@ -26,8 +26,7 @@ public:
 		//gotoxy(this->x, this->y+2); cout << "¡á¡á¡á";
 	}
 	~Small_Monster() {
-		gotoxy(this->x, this->y);
-		cout << "     " << endl << "     " << endl << "     ";
+		gotoxy(this->x + 1, this->y); cout << " ";
 	}
 };
 
@@ -44,11 +43,12 @@ void mainGame() {
 	gotoxy(my_x, my_y);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 	printf("¢º¡Ý¢¸");
-	Small_Monster* monster;
-	monster = new Small_Monster[5];
+	Small_Monster* monster[5];
+	// monster = new Small_Monster[5];
 	for (int i = 0; i < 5; i++) {
-		monster[i].setter(rand() % 61 + 20, rand() % 21 + 1);
-		monster[i].print();
+		monster[i] = new Small_Monster();
+		monster[i]->setter(rand() % 61 + 20, rand() % 21 + 1);
+		monster[i]->print();
 	}
 	// Monster monster;
 
@@ -67,9 +67,9 @@ void mainGame() {
 				for (int i = my_y - 1; i >= 0; i--) {
 					gotoxy(my_x, i); 
 					for (int j = 0; j < 5; j++) {
-						if (monster[j].x == my_x - 1 && monster[j].y + 1 == i) {
+						if (monster[j]->x == my_x - 1 && monster[j]->y + 1 == i) {
 							i = -1;
-							continue;
+							break;
 						}
 					}
 					cout << " ";
@@ -77,9 +77,10 @@ void mainGame() {
 				for (int i = my_y - 1; i >= 0; i--) {
 					gotoxy(my_x+1, i);
 					for (int j = 0; j < 5; j++) {
-						if (monster[j].x == my_x && monster[j].y+1 == i) {
+						if (monster[j] != nullptr && monster[j]->x == my_x && monster[j]->y == i) {
+							delete monster[j];
 							i = -1;
-							continue;
+							break;
 						}
 					}
 					cout << "¡Ú";
@@ -88,9 +89,9 @@ void mainGame() {
 				for (int i = my_y - 1; i >= 0; i--) {
 					gotoxy(my_x + 2, i); 
 					for (int j = 0; j < 5; j++) {
-						if (monster[j].x == my_x + 1 && monster[j].y + 1 == i) {
+						if (monster[j]->x == my_x + 1 && monster[j]->y + 1 == i) {
 							i = -1;
-							continue;
+							break;
 						}
 					}
 					cout << " ";
@@ -109,9 +110,9 @@ void mainGame() {
 				for (int i = my_y - 1; i >= 0; i--) {
 					gotoxy(my_x, i); 
 					for (int j = 0; j < 5; j++) {
-						if (monster[j].x == my_x-1 && monster[j].y + 1 == i) {
+						if (monster[j]->x == my_x-1 && monster[j]->y + 1 == i) {
 							i = -1;
-							continue;
+							break;
 						}
 					}
 					cout << " ";
@@ -119,9 +120,10 @@ void mainGame() {
 				for (int i = my_y - 1; i >= 0; i--) {
 					gotoxy(my_x+1, i);
 					for (int j = 0; j < 5; j++) {
-						if (monster[j].x == my_x && monster[j].y +1 == i) {
+						if (monster[j] != nullptr && monster[j]->x == my_x && monster[j]->y == i) {
+							delete monster[j];
 							i = -1;
-							continue;
+							break;
 						}
 					}
 					cout << "¡Ú";
@@ -130,9 +132,9 @@ void mainGame() {
 				for (int i = my_y - 1; i >= 0; i--) {
 					gotoxy(my_x+2, i);
 					for (int j = 0; j < 5; j++) {
-						if (monster[j].x == my_x + 1 && monster[j].y + 1 == i) {
+						if (monster[j]->x == my_x + 1 && monster[j]->y + 1 == i) {
 							i = -1;
-							continue;
+							break;
 						}
 					}
 					cout << " ";
@@ -142,6 +144,5 @@ void mainGame() {
 		}
 	} while (key != 27); //ESC = 27
 	CursorView(1);
-	delete[] monster;
 	return;
 }
