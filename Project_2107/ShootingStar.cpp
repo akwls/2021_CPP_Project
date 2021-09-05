@@ -21,7 +21,7 @@ public:
 */
 
 int main() {
-	system("mode con cols=100 lines=50 | title Shooting Star★!!!!");
+	system("mode con cols=150 lines=50 | title Shooting Star★!!!!");
 	srand((unsigned int)time(NULL));
 	
 	while (true) {

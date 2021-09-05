@@ -6,39 +6,61 @@ using namespace std;
 
 int printStartMenu() {
 	system("cls");
-	gotoxy(25, 6); cout << " _____  _                    _    _               " << endl;
-	gotoxy(25, 7); cout << "/  ___|| |                  | |  (_)              " << endl;
-	gotoxy(25, 8); cout << "\\ `--. | |__    ___    ___  | |_  _  _ __    __ _ " << endl;
-	gotoxy(25, 9); cout << " `--. \\| '_ \\  / _ \\  / _ \\ | __|| || '_ \\  / _` |" << endl;
-	gotoxy(25, 10); cout << "/\\__/ /| | | || (_) || (_) || |_ | || | | || (_| |" << endl;
-	gotoxy(25, 11); cout << "\\____/ |_| |_| \\___/  \\___/  \\__||_||_| |_| \\__, |" << endl;
-	gotoxy(25, 12); cout << "                                             __/ |" << endl;
-	gotoxy(25, 13); cout << "                                            |___/ " << endl;
-	gotoxy(36, 14); cout << " _____  _                " << endl;
-	gotoxy(36, 15); cout << "/  ___|| |               " << endl;
-	gotoxy(36, 16); cout << "\\ `--. | |_   __ _  _ __ " << endl;
-	gotoxy(36, 17); cout << " `--. \\| __| / _` || '__|" << endl;
-	gotoxy(36, 18); cout << "/\\__/ /| |_ | (_| || |   " << endl;
-	gotoxy(36, 19); cout << "\\____/  \\__| \\__,_||_|   " << endl;
+	gotoxy(50, 6); cout << " _____  _                    _    _               ";
+	gotoxy(50, 7); cout << "/  ___|| |                  | |  (_)              ";
+	gotoxy(50, 8); cout << "\\ `--. | |__    ___    ___  | |_  _  _ __    __ _ ";
+	gotoxy(50, 9); cout << " `--. \\| '_ \\  / _ \\  / _ \\ | __|| || '_ \\  / _` |";
+	gotoxy(50, 10); cout << "/\\__/ /| | | || (_) || (_) || |_ | || | | || (_| |";
+	gotoxy(50, 11); cout << "\\____/ |_| |_| \\___/  \\___/  \\__||_||_| |_| \\__, |";
+	gotoxy(50, 12); cout << "                                             __/ |";
+	gotoxy(50, 13); cout << "                                            |___/ ";
+	gotoxy(61, 14); cout << " _____  _                ";
+	gotoxy(61, 15); cout << "/  ___|| |               ";
+	gotoxy(61, 16); cout << "\\ `--. | |_   __ _  _ __ ";
+	gotoxy(61, 17); cout << " `--. \\| __| / _` || '__|";
+	gotoxy(61, 18); cout << "/\\__/ /| |_ | (_| || |   ";
+	gotoxy(61, 19); cout << "\\____/  \\__| \\__,_||_|   ";
 
-	cout << endl;
-	cout << "					  1. 게임 시작						  " << endl;
-	cout << "					  2. 게임 방법						  " << endl;
-	cout << "					  3. 순위						      " << endl;
-	cout << "					  0. 종료						      " << endl;
-	int menu;
+	gotoxy(66, 21);
+	cout << "1. 게임 시작";
+	gotoxy(66, 22);
+	cout << "2. 게임 방법";
+	gotoxy(66, 23);
+	cout << "3. 순위 보기";
+	gotoxy(66, 24);
+	cout << "4. 게임 종료";
+
+	char key;
+	int x = 62;
+	int y = 21;
+	gotoxy(x, y);
+	cout << ">> ";
 	while (true) {
-		cout << endl << ">> ";
-		cin >> menu;
-		if (menu >= 0 && menu <= 3) break;
-		printf("다시 입력해주세요!");
-		Sleep(800); // 1초 지연
-		for (int i = 0; i < 2; ++i) { // 위 출력 내용 지우기
-			//printf("%c[2K",27);
-			cout << "\33[2K"; //line clear
-			cout << "\x1b[A"; //up line (ESC [ A) must be support VT100 escape seq
-			cout << "\b\b\b\b\b\b\b\b\b\b\b";
+		key = _getch();
+		switch (key) {
+		case 72: 
+			if (y > 21 && y <= 24) {
+				gotoxy(x, y);
+				cout << "   ";
+				y--;
+				gotoxy(x, y);
+				cout << ">> ";
+			}
+			break;
+		case 80:
+			if (y < 24 && y >= 21) {
+				gotoxy(x, y);
+				cout << "   ";
+				y++;
+				gotoxy(x, y);
+				cout << ">> ";
+			}
+			break;
+		case 13:
+			return y - 20;
 		}
+		
+		
 	}
-	return menu;
+	return 0;
 }
