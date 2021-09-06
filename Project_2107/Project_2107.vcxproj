@@ -140,15 +140,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CursorView.cpp" />
+    <ClCompile Include="Jelly.cpp" />
     <ClCompile Include="mainGame.cpp" />
+    <ClCompile Include="printGameOver.cpp" />
     <ClCompile Include="printRanking.cpp" />
     <ClCompile Include="printScript.cpp" />
     <ClCompile Include="printStartMenu.cpp" />
     <ClCompile Include="setCursorPos.cpp" />
     <ClCompile Include="ShootingStar.cpp" />
+    <ClCompile Include="Small_Monster_Real.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shooting_star.h" />
+    <ClInclude Include="Small_Monster.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

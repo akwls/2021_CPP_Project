@@ -4,6 +4,7 @@
 #include <thread>
 #include "shooting_star.h"
 using namespace std;
+
 #define LEFT   75      // 좌측방향키 
 #define RIGHT  77      // 우측방향키 
 #define UP     72      // 위쪽방향키 
@@ -17,72 +18,6 @@ using namespace std;
 
 static int life = 3;
 
-class Small_Monster {
-public:
-	int x, y;
-	void setter(int x, int y) {
-		this->x = x;
-		this->y = y;
-	}
-	void print() {
-		gotoxy(this->x-1, this->y); cout << " ■ ";
-	}
-	void move() {
-		gotoxy(this->x, this->y); cout << " ";
-		this->y++;
-		gotoxy(this->x - 1, this->y); cout << " ■ ";
-	}
-	~Small_Monster() {
-		gotoxy(this->x, this->y); cout << " ";
-	}
-};
-
-void left(int my_x, int my_y, Small_Monster* monster[]) {
-	for (int i = my_y - 1; i >= 1; i--) {
-		gotoxy(my_x, i);
-		for (int j = 0; j < 5; j++) {
-			if (monster[j]->x == my_x && monster[j]->y + 1 == i) {
-				i = -1;
-				break;
-			}
-		}
-		cout << " ";
-	}
-}
-void center(int my_x, int my_y, Small_Monster* monster[]) {
-	int target = -1;
-	for (int i = my_y - 1; i >= 1; i--) {
-		gotoxy(my_x + 1, i);
-		for (int j = 0; j < 5; j++) {
-			if (monster[j] != nullptr && monster[j]->x == my_x + 1 && monster[j]->y == i) {
-				target = j;
-				break;
-			}
-		}
-		if (target != -1 && monster[target] != nullptr) {
-			delete monster[target];
-			monster[target] = new Small_Monster();
-			monster[target]->setter(rand() % 61 + 20, rand() % 21 + 1);
-			monster[target]->print();
-			break;
-		}
-		cout << "★";
-		// Sleep(1);
-	}
-	
-}
-void right(int my_x, int my_y, Small_Monster* monster[]) {
-	for (int i = my_y - 1; i >= 1; i--) {
-		gotoxy(my_x + 2, i);
-		for (int j = 0; j < 5; j++) {
-			if (monster[j]->x == my_x + 2 && monster[j]->y + 1 == i) {
-				i = -1;
-				break;
-			}
-		}
-		cout << " ";
-	}
-}
 
 void print_life() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
@@ -109,46 +44,6 @@ void monster_move(Small_Monster* monster[]) {
 		}
 	}
 	monster[rand() % 5]->move();
-}
-
-int printGameOver() {
-	CursorView(1);
-	system("cls");
-	gotoxy(60, 15);
-	cout << " _____   ___  ___  ___ _____ ";
-	gotoxy(60, 16);
-	cout << "|  __ \\ / _ \\ |  \\/  ||  ___|";
-	gotoxy(60, 17);
-	cout << "| |  \\// /_\\ \\| .  . || |__  ";
-	gotoxy(60, 18);
-	cout << "| | __ |  _  || |\\/| ||  __| ";
-	gotoxy(60, 19);
-	cout << "| |_\\ \\| | | || |  | || |___ ";
-	gotoxy(60, 20);
-	cout << " \\____/\\_| |_/\\_|  |_/\\____/ ";
-
-	gotoxy(60, 21);
-	cout << " _____  _   _  _____ ______ ";
-	gotoxy(60, 22);
-	cout << "|  _  || | | ||  ___|| ___ \\";
-	gotoxy(60, 23);
-	cout << "| | | || | | || |__  | |_/ /";
-	gotoxy(60, 24);
-	cout << "| | | || | | ||  __| |    / ";
-	gotoxy(60, 25);
-	cout << "\\ \\_/ /\\ \\_/ /| |___ | |\\ \\ ";
-	gotoxy(60, 26);
-	cout << " \\___/  \\___/ \\____/ \\_| \\_|";
-
-	gotoxy(56, 30);
-	cout << "[ESC] 키를 누르면 메인 화면으로 넘어갑니다....";
-	char key;
-	while (true) {
-		while (true) {
-			key = _getch();
-			if (key == 27) return -1;
-		}
-	}
 }
 
 void mainGame() {

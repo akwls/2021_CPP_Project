@@ -36,9 +36,21 @@
     <ClCompile Include="printRanking.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Jelly.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="printGameOver.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Small_Monster_Real.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shooting_star.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Small_Monster.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

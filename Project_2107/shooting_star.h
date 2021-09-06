@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Small_Monster.h"
 
 void printScript();
 void printRanking();
@@ -8,3 +8,8 @@ void mainGame();
 void CursorView(char);
 void gotoxy(int, int);
 void printRanking();
+void left(int my_x, int my_y, Small_Monster* monster[]);
+void center(int my_x, int my_y, Small_Monster* monster[]);
+void right(int my_x, int my_y, Small_Monster* monster[]);
+int printGameOver();
+
