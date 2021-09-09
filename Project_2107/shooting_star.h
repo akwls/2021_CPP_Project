@@ -12,4 +12,4 @@ void left(int my_x, int my_y, Small_Monster* monster[]);
 void center(int my_x, int my_y, Small_Monster* monster[]);
 void right(int my_x, int my_y, Small_Monster* monster[]);
 int printGameOver();
-
+void printScore(int);

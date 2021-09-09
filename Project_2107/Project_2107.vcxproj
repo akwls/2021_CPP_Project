@@ -144,6 +144,7 @@
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="printGameOver.cpp" />
     <ClCompile Include="printRanking.cpp" />
+    <ClCompile Include="printScore.cpp" />
     <ClCompile Include="printScript.cpp" />
     <ClCompile Include="printStartMenu.cpp" />
     <ClCompile Include="setCursorPos.cpp" />

@@ -37,7 +37,7 @@ void monster_move(Small_Monster* monster[]) {
 		if (monster[i]->y >= END) {
 			delete monster[i];
 			monster[i] = new Small_Monster();
-			monster[i]->setter(rand() % 61 + 20, rand() % 21 + 1);
+			monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1);
 			monster[i]->print();
 			life--;
 			print_life();
@@ -46,7 +46,20 @@ void monster_move(Small_Monster* monster[]) {
 	monster[rand() % 5]->move();
 }
 
+
+
 void mainGame() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	gotoxy(110, 15);
+	cout << " ___   ___   ___   _ __   ___ ";
+	gotoxy(110, 16);
+	cout << "/ __| / __| / _ \\ | '__| / _ \\";
+	gotoxy(110, 17);
+	cout << "\\__ \\| (__ | (_) || |   |  __/";
+	gotoxy(110, 18);
+	cout << "|___/ \\___| \\___/ |_|    \\___|";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	printScore(0);
 	for (int i = 1; i <= X_END; i++) {
 		gotoxy(i, 0);
 		cout << "-";
@@ -80,7 +93,7 @@ void mainGame() {
 	Small_Monster* monster[5];
 	for (int i = 0; i < 5; i++) {
 		monster[i] = new Small_Monster();
-		monster[i]->setter(rand() % 71 + 10, rand() % 11 + 1);
+		monster[i]->setter(rand() % 71 + 10, rand() % 6+ 1);
 		monster[i]->print();
 	}
 	center(my_x, my_y, monster);

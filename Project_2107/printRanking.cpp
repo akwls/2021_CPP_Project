@@ -6,6 +6,7 @@ using namespace std;
 
 void printRanking() {
 	int key;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	gotoxy(35, 5);  cout << "                     _    ";
 	gotoxy(35, 6);  cout << "                    | |   ";
 	gotoxy(35, 7);  cout << " _ __   __ _  _ __  | | __";

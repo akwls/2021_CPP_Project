@@ -45,6 +45,9 @@
     <ClCompile Include="Small_Monster_Real.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="printScore.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shooting_star.h">

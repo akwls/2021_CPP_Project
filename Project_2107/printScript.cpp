@@ -5,6 +5,7 @@
 
 void printScript() {
 	int key;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	printf("\t\t\t\t\tSHOOTING STAR\n\n\n\n");
 	printf("캔디나라에 살고 있는 \"롤리\", \n");
 	printf("어느 날, 캔디들의 달콤함을 빼앗기 위해 몬스터들이 내려오기 시작했다!\n");
@@ -12,6 +13,9 @@ void printScript() {
 	printf("\"롤리\"의 젤리를 쏘아서 몬스터들을 물리치자!\n\n\n\n");
 	printf("[게임 플레이 방법]\n\n");
 	printf("키보드를 누를때마다 위에서 사탕 몬스터들이 내려옵니다!\n\n");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	printf("움직임을 최소화하면서 몬스터를 죽이는게 핵심!!!!\n");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	printf("←, → 화살표로 캐릭터를 움직여 젤리를 쏘아 몬스터를 맞춰주세요.\n");
 	printf("젤리를 맞은 몬스터는 사라집니다.\n\n\n\n");
 	printf("[생명]\n\n");
