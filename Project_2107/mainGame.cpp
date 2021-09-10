@@ -31,7 +31,7 @@ void print_life() {
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 }
-
+/*
 void monster_move(Small_Monster* monster[]) {
 	for (int i = 0; i < 5; i++) {
 		if (monster[i]->y >= END) {
@@ -45,11 +45,13 @@ void monster_move(Small_Monster* monster[]) {
 	}
 	monster[rand() % 5]->move();
 }
+*/
 
 
-
+/*
 void mainGame() {
 	life = 5;
+	setScore();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
 	gotoxy(110, 15);
 	cout << " ___   ___   ___   _ __   ___ ";
@@ -61,6 +63,12 @@ void mainGame() {
 	cout << "|___/ \\___| \\___/ |_|    \\___|";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	printScore(0);
+
+	gotoxy(110, 23);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
+	cout << "■";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	cout << " : 5점";
 	for (int i = 1; i <= X_END; i++) {
 		gotoxy(i, 0);
 		cout << "-";
@@ -140,5 +148,135 @@ void mainGame() {
 		}
 	} while (key != 27); //ESC = 27
 	CursorView(1);
+	return;
+}
+*/
+void thread_shoot(int x, int y) {
+	for (int i = y; i >= 0; i--) {
+		gotoxy(x, y);
+		cout << " ";
+		y++;
+		gotoxy(x, y);
+		cout << "♠";
+	}
+}
+
+void thread_move(int &my_x, int &my_y, char &key) {
+	gotoxy(my_x, my_y);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+	cout << "▶◎◀";
+	do {
+		if (life <= 0) {
+			if (printGameOver() == -1) return;
+		}
+		key = _getch();
+		switch (key) {
+		case RIGHT:
+			if (my_x >= 2 && my_x < 97) {
+				gotoxy(my_x, my_y);
+				printf("   ");
+				my_x += 1;
+				gotoxy(my_x, my_y);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+				printf("▶◎◀");
+			}
+			break;
+		case LEFT:
+			if (my_x > 2 && my_x <= 97) {
+				gotoxy(my_x, my_y);
+				printf("   ");
+				my_x -= 1;
+				gotoxy(my_x, my_y);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+				printf("▶◎◀");
+			}
+			break;
+		default:
+			break;
+		}
+	} while (key != 27); //ESC = 27
+}
+
+void thread_monster(char& key) {
+	Small_Monster* monster[5];
+	for (int i = 0; i < 5; i++) {
+		monster[i] = new Small_Monster();
+		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1);
+		monster[i]->print();
+	}
+	do {
+		for (int i = 0; i < 5; i++) {
+			if (monster[i]->y >= END) {
+				delete monster[i];
+				monster[i] = new Small_Monster();
+				monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1);
+				monster[i]->print();
+				life--;
+				print_life();
+			}
+		}
+		monster[rand() % 5]->move();
+		Sleep(500);
+	} while (key != 27);
+}
+
+
+
+void thread_main() {
+	life = 5;
+	setScore();
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	gotoxy(110, 15);
+	cout << " ___   ___   ___   _ __   ___ ";
+	gotoxy(110, 16);
+	cout << "/ __| / __| / _ \\ | '__| / _ \\";
+	gotoxy(110, 17);
+	cout << "\\__ \\| (__ | (_) || |   |  __/";
+	gotoxy(110, 18);
+	cout << "|___/ \\___| \\___/ |_|    \\___|";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	printScore(0);
+
+	gotoxy(110, 23);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
+	cout << "■";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	cout << " : 5점";
+	for (int i = 1; i <= X_END; i++) {
+		gotoxy(i, 0);
+		cout << "-";
+	}
+	for (int i = 1; i < Y_END; i++) {
+		gotoxy(1, i);
+		cout << "|";
+	}
+	for (int i = 1; i < Y_END; i++) {
+		gotoxy(X_END, i);
+		cout << "|";
+	}
+	for (int i = 1; i <= X_END; i++) {
+		gotoxy(i, Y_END - 1);
+		cout << "-";
+	}
+	print_life();
+
+	int my_x = 44, my_y = 45, i = 0;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+	for (int i = 2; i < X_END - 1; i++) {
+		gotoxy(i, my_y + 1);
+		cout << "◆";
+	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	char key;
+
+	CursorView(0);
+
+	thread t1(thread_move, ref(my_x), ref(my_y), ref(key)); // key가 ctrl 이면 shoot thread join.
+	thread t2(thread_monster, ref(key));
+	// move 안에 shoot 스레드 가지는 방법은?
+
+	t1.join();
+	t2.join();
+
 	return;
 }

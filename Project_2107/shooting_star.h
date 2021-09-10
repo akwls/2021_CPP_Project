@@ -13,3 +13,7 @@ void center(int my_x, int my_y, Small_Monster* monster[]);
 void right(int my_x, int my_y, Small_Monster* monster[]);
 int printGameOver();
 void printScore(int);
+void setScore();
+void thread_main();
+void thread_move(int& my_x, int& my_y, char& key);
+void thread_shoot(int x, int y);

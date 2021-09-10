@@ -4,10 +4,14 @@
 #include <thread>
 #include "shooting_star.h"
 
-static int score = 0;
+static int score;
 
 void printScore(int point) {
 	score += point;
 	gotoxy(124, 20);
-	cout << score;
+	cout << score << "Á¡";
+}
+
+void setScore() {
+	score = 0;
 }

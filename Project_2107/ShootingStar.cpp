@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <Windows.h>
 #include <conio.h>
+#include <thread>
 #include "shooting_star.h"
 using namespace std;
 
@@ -14,7 +15,7 @@ int main() {
 			return 0;
 		case 1:
 			system("cls");
-			mainGame();
+			thread_main();
 			break;
 		case 2:
 			system("cls");

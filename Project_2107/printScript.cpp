@@ -2,7 +2,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
-
+#include <thread>
 void printScript() {
 	int key;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -17,9 +17,10 @@ void printScript() {
 	printf("움직임을 최소화하면서 몬스터를 죽이는게 핵심!!!!\n");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	printf("←, → 화살표로 캐릭터를 움직여 젤리를 쏘아 몬스터를 맞춰주세요.\n");
+	printf("몬스터의 색깔에 따라 점수는 달라집니다. 게임 플레이 화면 우측을 확인하세요.\n");
 	printf("젤리를 맞은 몬스터는 사라집니다.\n\n\n\n");
 	printf("[생명]\n\n");
-	printf("몬스터가 파란선 밑으로 내려오면 생명이 깎이게 됩니다. 주어진 생명은 3개!\n");
+	printf("몬스터가 파란선 밑으로 내려오면 생명이 깎이게 됩니다. 주어진 생명은 5개!\n");
 	printf("화면 우측 상단에서 생명을 확인할 수 있습니다.\n\n\n\n");
 	printf("[점수]\n\n");
 	printf("젤리의 크기에 따라 점수가 달라집니다. \n");

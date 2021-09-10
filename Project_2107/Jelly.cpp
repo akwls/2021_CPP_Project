@@ -35,14 +35,14 @@ void center(int my_x, int my_y, Small_Monster* monster[]) {
 		}
 		if (target != -1 && monster[target] != nullptr) {
 			delete monster[target];
-			printScore(10);
+			printScore(5);
 			monster[target] = new Small_Monster();
 			monster[target]->setter(rand() % 61 + 20, rand() % 6 + 1);
 			monster[target]->print();
 			break;
 		}
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-		cout << "¡Ú";
+		cout << "¢¼";
 		// Sleep(1);
 	}
 
