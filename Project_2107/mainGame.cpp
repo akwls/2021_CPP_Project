@@ -16,14 +16,14 @@ using namespace std;
 // 15 => WHITE
 // 6 => DARK YELLOW
 
-static int life = 3;
+static int life = 5;
 
 
 void print_life() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 	int x = X_END + 3;
 	gotoxy(x, 1);
-	cout << "      ";
+	cout << "                  ";
 	for (int i = 0; i < life; i++) {
 		gotoxy(x, 1);
 		cout << "¢¾ ";
@@ -49,6 +49,7 @@ void monster_move(Small_Monster* monster[]) {
 
 
 void mainGame() {
+	life = 5;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
 	gotoxy(110, 15);
 	cout << " ___   ___   ___   _ __   ___ ";
