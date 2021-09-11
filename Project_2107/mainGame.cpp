@@ -151,13 +151,30 @@ void mainGame() {
 	return;
 }
 */
-void thread_shoot(int x, int y) {
-	for (int i = y; i >= 0; i--) {
-		gotoxy(x, y);
-		cout << " ";
-		y++;
-		gotoxy(x, y);
-		cout << "♠";
+
+
+void thread_shoot(int& x, int& y, char& key, Small_Monster* monster[]) {
+	while (key != 27) {
+		if (key == 32) {
+			for (int i = y-1; i > 0; i--) {
+				gotoxy(x, i);
+				cout << " ";
+				gotoxy(x, i-1);
+				cout << "♠";
+				for (int j = 0; j < 5; j++) {
+					if (x == monster[j]->x && i == monster[j]->y) {
+						delete monster[j];
+						printScore(5);
+						monster[j] = new Small_Monster();
+						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1);
+						monster[j]->print();
+						i = -1;
+						break;
+					}
+				}
+				Sleep(1);
+			}
+		}
 	}
 }
 
@@ -197,13 +214,9 @@ void thread_move(int &my_x, int &my_y, char &key) {
 	} while (key != 27); //ESC = 27
 }
 
-void thread_monster(char& key) {
-	Small_Monster* monster[5];
-	for (int i = 0; i < 5; i++) {
-		monster[i] = new Small_Monster();
-		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1);
-		monster[i]->print();
-	}
+void thread_monster(char& key, Small_Monster* monster[]) {
+	
+	
 	do {
 		for (int i = 0; i < 5; i++) {
 			if (monster[i]->y >= END) {
@@ -219,6 +232,7 @@ void thread_monster(char& key) {
 		Sleep(500);
 	} while (key != 27);
 }
+
 
 
 
@@ -271,12 +285,20 @@ void thread_main() {
 
 	CursorView(0);
 
-	thread t1(thread_move, ref(my_x), ref(my_y), ref(key)); // key가 ctrl 이면 shoot thread join.
-	thread t2(thread_monster, ref(key));
-	// move 안에 shoot 스레드 가지는 방법은?
+	Small_Monster* monster[5];
+	for (int i = 0; i < 5; i++) {
+		monster[i] = new Small_Monster();
+		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1);
+		monster[i]->print();
+	}
+
+	thread t1(thread_move, ref(my_x), ref(my_y), ref(key));
+	thread t2(thread_monster, ref(key), monster);
+	thread t3(thread_shoot, ref(my_x), ref(my_y), ref(key), monster);
 
 	t1.join();
 	t2.join();
+	t3.join();
 
 	return;
 }
