@@ -15,6 +15,8 @@ using namespace std;
 // 12 => RED
 // 15 => WHITE
 // 6 => DARK YELLOW
+#define START_X 44
+#define START_Y 45
 
 static int life = 5;
 
@@ -155,12 +157,13 @@ void mainGame() {
 
 void thread_shoot(int& x, int& y, char& key, Small_Monster* monster[]) {
 	while (key != 27) {
+		int shoot_x = x + 1;
 		if (key == 32) {
 			for (int i = y-1; i > 0; i--) {
-				gotoxy(x, i);
-				cout << " ";
-				gotoxy(x, i-1);
+				gotoxy(shoot_x, i-1);
 				cout << "¢¼";
+				gotoxy(shoot_x, i);
+				cout << " ";
 				for (int j = 0; j < 5; j++) {
 					if (x == monster[j]->x && i == monster[j]->y) {
 						delete monster[j];
@@ -172,7 +175,7 @@ void thread_shoot(int& x, int& y, char& key, Small_Monster* monster[]) {
 						break;
 					}
 				}
-				Sleep(1);
+				Sleep(5);
 			}
 		}
 	}
@@ -219,7 +222,7 @@ void thread_monster(char& key, Small_Monster* monster[]) {
 	
 	do {
 		for (int i = 0; i < 5; i++) {
-			if (monster[i]->y >= END) {
+			if (monster[i]->y >= START_Y) {
 				delete monster[i];
 				monster[i] = new Small_Monster();
 				monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1);
@@ -277,7 +280,7 @@ void thread_main() {
 	int my_x = 44, my_y = 45, i = 0;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
 	for (int i = 2; i < X_END - 1; i++) {
-		gotoxy(i, my_y + 1);
+		gotoxy(i, START_Y + 1);
 		cout << "¡ß";
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
