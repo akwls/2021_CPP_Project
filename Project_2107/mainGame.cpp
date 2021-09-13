@@ -245,11 +245,9 @@ void print_life() {
 }
 
 void thread_main() {
-	
 	mutex g_mutex;
-	
-	
 	life = 5;
+	bEnded = false;
 	setScore();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
 	gotoxy(110, 15);
@@ -336,6 +334,10 @@ void thread_main() {
 		}
 	});
 
+	thread thread_shoot([&]() {
+		
+	});
+
 	while(true) {
 		key = _getch();
 		if (key == 27) {
@@ -343,11 +345,10 @@ void thread_main() {
 			thread_monster.join();
 			return;
 		}
-		if (life <= 0) {
+		else if (life <= 0) {
 			bEnded = true;
-			printGameOver();
 			thread_monster.join();
-			return;
+			if (printGameOver() == 0) return;
 		}
 		switch (key) {
 		case RIGHT:
