@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <conio.h>
 #include <thread>
+#include <mutex>
 #include "shooting_star.h"
 using namespace std;
 
@@ -18,21 +19,7 @@ using namespace std;
 #define START_X 44
 #define START_Y 45
 
-static int life = 5;
 
-
-void print_life() {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-	int x = X_END + 3;
-	gotoxy(x, 1);
-	cout << "                  ";
-	for (int i = 0; i < life; i++) {
-		gotoxy(x, 1);
-		cout << "♥ ";
-		x += 2;
-	}
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-}
 /*
 void monster_move(Small_Monster* monster[]) {
 	for (int i = 0; i < 5; i++) {
@@ -154,7 +141,7 @@ void mainGame() {
 }
 */
 
-
+/*
 void thread_shoot(int& x, int& y, char& key, Small_Monster* monster[]) {
 	while (key != 27) {
 		int shoot_x = x + 1;
@@ -164,6 +151,7 @@ void thread_shoot(int& x, int& y, char& key, Small_Monster* monster[]) {
 				cout << "♠";
 				gotoxy(shoot_x, i);
 				cout << " ";
+				g_mutex.lock();
 				for (int j = 0; j < 5; j++) {
 					if (x == monster[j]->x && i == monster[j]->y) {
 						delete monster[j];
@@ -175,16 +163,15 @@ void thread_shoot(int& x, int& y, char& key, Small_Monster* monster[]) {
 						break;
 					}
 				}
+				g_mutex.unlock();
 				Sleep(5);
 			}
+			continue;
 		}
 	}
 }
 
 void thread_move(int &my_x, int &my_y, char &key) {
-	gotoxy(my_x, my_y);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-	cout << "▶◎◀";
 	do {
 		if (life <= 0) {
 			if (printGameOver() == -1) return;
@@ -215,11 +202,10 @@ void thread_move(int &my_x, int &my_y, char &key) {
 			break;
 		}
 	} while (key != 27); //ESC = 27
+	return;
 }
 
 void thread_monster(char& key, Small_Monster* monster[]) {
-	
-	
 	do {
 		for (int i = 0; i < 5; i++) {
 			if (monster[i]->y >= START_Y) {
@@ -234,12 +220,35 @@ void thread_monster(char& key, Small_Monster* monster[]) {
 		monster[rand() % 5]->move();
 		Sleep(500);
 	} while (key != 27);
+	return;
+}
+*/
+
+int life = 5;
+bool bEnded = false;
+
+void print_life() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	int x = X_END + 3;
+	gotoxy(x, 1);
+	cout << "                  ";
+	if (life <= 0) {
+		bEnded = true;
+		printGameOver();
+	}
+	for (int i = 0; i < life; i++) {
+		gotoxy(x, 1);
+		cout << "♥ ";
+		x += 2;
+	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 }
 
-
-
-
 void thread_main() {
+	
+	mutex g_mutex;
+	
+	
 	life = 5;
 	setScore();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
@@ -295,6 +304,11 @@ void thread_main() {
 		monster[i]->print();
 	}
 
+	gotoxy(my_x, my_y);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+	cout << "▶◎◀";
+
+	/*
 	thread t1(thread_move, ref(my_x), ref(my_y), ref(key));
 	thread t2(thread_monster, ref(key), monster);
 	thread t3(thread_shoot, ref(my_x), ref(my_y), ref(key), monster);
@@ -302,6 +316,67 @@ void thread_main() {
 	t1.join();
 	t2.join();
 	t3.join();
+	*/
+	
+	thread thread_monster([&]() {
+		while (bEnded == false) // true이면 스레드 실행 종료
+		{
+			for (int i = 0; i < 5; i++) {
+				if (monster[i]->y >= START_Y) {
+					delete monster[i];
+					monster[i] = new Small_Monster();
+					monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1);
+					monster[i]->print();
+					life--;
+					print_life();
+				}
+			}
+			monster[rand() % 5]->move();
+			Sleep(100);
+		}
+	});
 
+	while(true) {
+		key = _getch();
+		if (key == 27) {
+			bEnded = true;
+			thread_monster.join();
+			return;
+		}
+		if (life <= 0) {
+			bEnded = true;
+			printGameOver();
+			thread_monster.join();
+			return;
+		}
+		switch (key) {
+		case RIGHT:
+			if (my_x >= 2 && my_x < 97) {
+				g_mutex.lock();
+				gotoxy(my_x, my_y);
+				printf("   ");
+				my_x += 1;
+				gotoxy(my_x, my_y);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+				printf("▶◎◀");
+				g_mutex.unlock();
+			}
+			break;
+		case LEFT:
+			if (my_x > 2 && my_x <= 97) {
+				g_mutex.lock();
+				gotoxy(my_x, my_y);
+				printf("   ");
+				my_x -= 1;
+				gotoxy(my_x, my_y);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+				printf("▶◎◀");
+				g_mutex.unlock();
+			}
+			break;
+		default:
+			break;
+		}
+	}
 	return;
 }

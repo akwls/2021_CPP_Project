@@ -39,11 +39,6 @@ int printGameOver() {
 
 	gotoxy(56, 30);
 	cout << "[ESC] 키를 누르면 메인 화면으로 넘어갑니다....";
-	char key;
-	while (true) {
-		while (true) {
-			key = _getch();
-			if (key == 27) return -1;
-		}
-	}
+	Sleep(3000);
+	return 0;
 }
