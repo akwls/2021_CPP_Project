@@ -224,7 +224,7 @@ void thread_monster(char& key, Small_Monster* monster[]) {
 }
 */
 
-int life = 5;
+int life = 3;
 bool bEnded = false;
 
 void print_life() {
@@ -244,9 +244,10 @@ void print_life() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 }
 
+condition_variable g_controller;
 void thread_main() {
 	mutex g_mutex;
-	life = 5;
+	life = 3;
 	bEnded = false;
 	setScore();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
@@ -330,22 +331,44 @@ void thread_main() {
 				}
 			}
 			monster[rand() % 5]->move();
-			Sleep(100);
+			Sleep(300);
 		}
 	});
 
+	/*
 	thread thread_shoot([&]() {
-		
-	});
+		unique_lock<std::mutex> lock(g_mutex);
+		while (true) {
+			g_controller.wait(lock);
+			int shoot_x = my_x + 1;
+			for (int i = my_y - 1; i > 0; i--) {
+				gotoxy(shoot_x, i - 1);
+				cout << "¢¼";
+				gotoxy(shoot_x, i);
+				cout << " ";
+				for (int j = 0; j < 5; j++) {
+					if (my_x == monster[j]->x && i == monster[j]->y) {
+						delete monster[j];
+						printScore(5);
+						monster[j] = new Small_Monster();
+						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1);
+						monster[j]->print();
+						i = -1;
+						break;
+					}
+				}
+				Sleep(5);
+			}
+		}
 
+	});
+	*/
+	// unique_lock<std::mutex> lock(g_mutex);
+	int current_y[5];
+	int shoot_x;
 	while(true) {
 		key = _getch();
-		if (key == 27) {
-			bEnded = true;
-			thread_monster.join();
-			return;
-		}
-		else if (life <= 0) {
+		if (life <= 0) {
 			bEnded = true;
 			thread_monster.join();
 			if (printGameOver() == 0) return;
@@ -353,27 +376,57 @@ void thread_main() {
 		switch (key) {
 		case RIGHT:
 			if (my_x >= 2 && my_x < 97) {
-				g_mutex.lock();
+				//g_mutex.lock();
 				gotoxy(my_x, my_y);
 				printf("   ");
 				my_x += 1;
 				gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("¢º¡Ý¢¸");
-				g_mutex.unlock();
+				//g_mutex.unlock();
 			}
 			break;
 		case LEFT:
 			if (my_x > 2 && my_x <= 97) {
-				g_mutex.lock();
+				//g_mutex.lock();
 				gotoxy(my_x, my_y);
 				printf("   ");
 				my_x -= 1;
 				gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("¢º¡Ý¢¸");
-				g_mutex.unlock();
+				//g_mutex.unlock();
 			}
+			break;
+		case 27:
+			bEnded = true;
+			thread_monster.join();
+			return;
+		case 32:
+			shoot_x = my_x + 1;
+			for (int i = 0; i < 5; i++) {
+				current_y[i] = monster[i]->y;
+			}
+			for (int i = my_y - 1; i > 0; i--) {
+				gotoxy(shoot_x, i-1);
+				cout << "¢¼";
+				gotoxy(shoot_x, i);
+				cout << " ";
+				for (int j = 0; j < 5; j++) {
+					if (shoot_x == monster[j]->x && i == current_y[j] -1) {
+						delete monster[j];
+						printScore(5);
+						monster[j] = new Small_Monster();
+						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1);
+						monster[j]->print();
+						i = -1;
+						cout << " ";
+						break;
+					}
+				}
+				Sleep(5);
+			}
+			// g_controller.notify_one();
 			break;
 		default:
 			break;
