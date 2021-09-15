@@ -18,6 +18,7 @@ using namespace std;
 // 6 => DARK YELLOW
 #define START_X 44
 #define START_Y 45
+#define MAX_MONSTER 5
 
 
 /*
@@ -296,8 +297,8 @@ void thread_main() {
 
 	CursorView(0);
 
-	Small_Monster* monster[5];
-	for (int i = 0; i < 5; i++) {
+	Small_Monster* monster[MAX_MONSTER];
+	for (int i = 0; i < MAX_MONSTER; i++) {
 		monster[i] = new Small_Monster();
 		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1);
 		monster[i]->print();
@@ -320,7 +321,9 @@ void thread_main() {
 	thread thread_monster([&]() {
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
-			for (int i = 0; i < 5; i++) {
+			//unique_lock<std::mutex> lock(g_mutex);
+			//g_controller.wait(lock, [&]() { return key != 32; });
+			for (int i = 0; i < MAX_MONSTER; i++) {
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
 					monster[i] = new Small_Monster();
@@ -330,8 +333,8 @@ void thread_main() {
 					print_life();
 				}
 			}
-			monster[rand() % 5]->move();
-			Sleep(300);
+			monster[rand() % MAX_MONSTER]->move();
+			Sleep(150);
 		}
 	});
 
@@ -364,9 +367,10 @@ void thread_main() {
 	});
 	*/
 	// unique_lock<std::mutex> lock(g_mutex);
-	int current_y[5];
+	// int current_y[MAX_MONSTER];
 	int shoot_x;
 	while(true) {
+		//g_controller.notify_one();
 		key = _getch();
 		if (life <= 0) {
 			bEnded = true;
@@ -404,26 +408,25 @@ void thread_main() {
 			return;
 		case 32:
 			shoot_x = my_x + 1;
-			for (int i = 0; i < 5; i++) {
-				current_y[i] = monster[i]->y;
-			}
-			for (int i = my_y - 1; i > 0; i--) {
+			for (int i = my_y - 1; i > 1; i--) {
 				gotoxy(shoot_x, i-1);
 				cout << "♠";
 				gotoxy(shoot_x, i);
 				cout << " ";
-				for (int j = 0; j < 5; j++) {
-					if (shoot_x == monster[j]->x && i == current_y[j] -1) {
+				// g_mutex.lock();
+				for (int j = 0; j < MAX_MONSTER; j++) {
+					if (shoot_x == monster[j]->x && i == monster[j]->y -1) {
 						delete monster[j];
-						printScore(5);
 						monster[j] = new Small_Monster();
 						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1);
 						monster[j]->print();
 						i = -1;
 						cout << " ";
+						printScore(5);
 						break;
 					}
 				}
+				//g_mutex.unlock();
 				Sleep(5);
 			}
 			// g_controller.notify_one();
