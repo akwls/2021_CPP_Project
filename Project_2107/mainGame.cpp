@@ -264,10 +264,22 @@ void thread_main() {
 	printScore(0);
 
 	gotoxy(110, 23);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+	cout << "бс";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	cout << " : 3┴б";
+	gotoxy(110, 24);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
 	cout << "бс";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	cout << " : 5┴б";
+	gotoxy(110, 25);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
+	cout << "бс";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	cout << " : 7┴б";
+	
+
 	for (int i = 1; i <= X_END; i++) {
 		gotoxy(i, 0);
 		cout << "-";
@@ -300,7 +312,7 @@ void thread_main() {
 	Small_Monster* monster[MAX_MONSTER];
 	for (int i = 0; i < MAX_MONSTER; i++) {
 		monster[i] = new Small_Monster();
-		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1);
+		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1, rand()%3);
 		monster[i]->print();
 	}
 
@@ -327,7 +339,7 @@ void thread_main() {
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
 					monster[i] = new Small_Monster();
-					monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1);
+					monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand()%3);
 					monster[i]->print();
 					life--;
 					print_life();
@@ -418,11 +430,11 @@ void thread_main() {
 					if (shoot_x == monster[j]->x && i == monster[j]->y -1) {
 						delete monster[j];
 						monster[j] = new Small_Monster();
-						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1);
+						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
 						monster[j]->print();
 						i = -1;
 						cout << " ";
-						printScore(5);
+						printScore(monster[j]->score);
 						break;
 					}
 				}

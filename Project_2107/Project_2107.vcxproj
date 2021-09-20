@@ -140,7 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CursorView.cpp" />
-    <ClCompile Include="Jelly.cpp" />
+    <ClCompile Include="Jelly.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="printGameOver.cpp" />
     <ClCompile Include="printRanking.cpp" />

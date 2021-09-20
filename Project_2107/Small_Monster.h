@@ -10,7 +10,8 @@ using namespace std;
 class Small_Monster {
 public:
 	int x, y;
-	void setter(int x, int y);
+	int color, score;
+	void setter(int x, int y, int color);
 	void print();
 	void move();
 	~Small_Monster();
