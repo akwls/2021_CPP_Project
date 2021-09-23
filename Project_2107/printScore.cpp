@@ -16,3 +16,7 @@ void printScore(int point) {
 void setScore() {
 	score = 0;
 }
+
+int getScore() {
+	return score;
+}
