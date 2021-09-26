@@ -36,7 +36,7 @@ void print_life() {
 	if (life <= 0) {
 		bEnded = true;
 		file.open("ranking.txt", ios_base::app | ios_base::in);
-		string data = name + "\t" + to_string(getScore()) + "\t";
+		string data = name + "/" + to_string(getScore()) + "/";
 		file.write(data.c_str(), data.size());
 		printGameOver();
 		
@@ -209,6 +209,7 @@ void thread_main() {
 		case 32:
 			shoot_x = my_x + 1;
 			for (int i = my_y - 1; i > 1; i--) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 				gotoxy(shoot_x, i-1);
 				cout << "¢¼";
 				gotoxy(shoot_x, i);
@@ -221,7 +222,7 @@ void thread_main() {
 						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
 						monster[j]->print();
 						i = -1;
-						cout << " ";
+						cout << " " << endl << " ";
 						printScore(monster[j]->score);
 						break;
 					}
