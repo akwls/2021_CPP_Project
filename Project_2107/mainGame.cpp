@@ -171,6 +171,7 @@ void thread_main() {
 	// int current_y[MAX_MONSTER];
 	int shoot_x;
 	while(true) {
+		CursorView(0);
 		//g_controller.notify_one();
 		key = _getch();
 		if (life <= 0) {

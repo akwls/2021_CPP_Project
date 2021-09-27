@@ -23,6 +23,7 @@ void printRanking() {
 	gotoxy(60, 10); cout << "|_|    \\__,_||_| |_||_|\\_\\";
 
 	gotoxy(25, 14); cout << "순위\t\t\t이름\t\t\t\t\t\t점수";
+	gotoxy(25, 15); cout << "===========================================================================";
 	string data;
 	string name[5];
 	int score[5];
@@ -48,13 +49,16 @@ void printRanking() {
 	}
 
 	for (int i = 0; i < 5; i++) {
-		gotoxy(25, print_y + i);
+		gotoxy(25, print_y++);
 		if (name[i] != "" && score[i] != 0) {
 			cout << i + 1 << "\t\t\t";
 			cout << name[i] + "\t\t\t\t\t\t";
 			cout << score[i];
+			gotoxy(25, print_y++);
+			cout << "---------------------------------------------------------------------------";
 
 		}
+		
 
 	}
 	f.close();
