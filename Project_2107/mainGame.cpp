@@ -40,6 +40,7 @@ void print_life() {
 		file.open("ranking.txt", ios_base::app | ios_base::in);
 		string data = name + "/" + to_string(getScore()) + "/";
 		file.write(data.c_str(), data.size());
+		file.close();
 		printGameOver();
 		
 	}
