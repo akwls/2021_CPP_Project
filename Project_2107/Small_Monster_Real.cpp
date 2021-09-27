@@ -6,7 +6,7 @@
 
 void Small_Monster::print() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), this->color);
-	gotoxy(this->x, this->y); cout << "бс";
+	shoot_gotoxy(this->x, this->y); cout << "бс";
 }
 void Small_Monster::setter(int x, int y, int color) {
 	this->x = x;
@@ -26,11 +26,11 @@ void Small_Monster::setter(int x, int y, int color) {
 }
 
 void Small_Monster::move() {
-	gotoxy(this->x, this->y); cout << " ";
+	shoot_gotoxy(this->x, this->y); cout << " ";
 	this->y++;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), this->color);
-	gotoxy(this->x, this->y); cout << "бс";
+	shoot_gotoxy(this->x, this->y); cout << "бс";
 }
 Small_Monster::~Small_Monster() {
-	gotoxy(this->x, this->y); cout << " ";
+	shoot_gotoxy(this->x, this->y); cout << " ";
 }

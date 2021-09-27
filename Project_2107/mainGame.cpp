@@ -26,6 +26,8 @@ bool bEnded = false;
 string name = "";
 ifstream fin;
 fstream file;
+std::condition_variable cv;
+std::mutex cv_m;
 
 
 void print_life() {
@@ -148,8 +150,7 @@ void thread_main() {
 	thread thread_monster([&]() {
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
-			//unique_lock<std::mutex> lock(g_mutex);
-			//g_controller.wait(lock, [&]() { return key != 32; });
+			unique_lock<std::mutex> lk(cv_m);
 			for (int i = 0; i < MAX_MONSTER; i++) {
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
@@ -180,10 +181,10 @@ void thread_main() {
 		case RIGHT:
 			if (my_x >= 2 && my_x < 97) {
 				//g_mutex.lock();
-				gotoxy(my_x, my_y);
+				main_gotoxy(my_x, my_y);
 				printf("   ");
 				my_x += 1;
-				gotoxy(my_x, my_y);
+				main_gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("▶◎◀");
 				//g_mutex.unlock();
@@ -192,10 +193,10 @@ void thread_main() {
 		case LEFT:
 			if (my_x > 2 && my_x <= 97) {
 				//g_mutex.lock();
-				gotoxy(my_x, my_y);
+				main_gotoxy(my_x, my_y);
 				printf("   ");
 				my_x -= 1;
-				gotoxy(my_x, my_y);
+				main_gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				printf("▶◎◀");
 				//g_mutex.unlock();
@@ -210,9 +211,9 @@ void thread_main() {
 			shoot_x = my_x + 1;
 			for (int i = my_y - 1; i > 1; i--) {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-				gotoxy(shoot_x, i-1);
+				main_gotoxy(shoot_x, i-1);
 				cout << "♠";
-				gotoxy(shoot_x, i);
+				main_gotoxy(shoot_x, i);
 				cout << " ";
 				// g_mutex.lock();
 				for (int j = 0; j < MAX_MONSTER; j++) {
@@ -221,8 +222,9 @@ void thread_main() {
 						monster[j] = new Small_Monster();
 						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
 						monster[j]->print();
+						main_gotoxy(shoot_x, i);
+						cout << " ";
 						i = -1;
-						cout << " " << endl << " ";
 						printScore(monster[j]->score);
 						break;
 					}
