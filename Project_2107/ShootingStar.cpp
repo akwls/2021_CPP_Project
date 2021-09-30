@@ -8,6 +8,7 @@ using namespace std;
 int main() {
 	system("mode con cols=150 lines=50 | title Shooting Star★!!!!");
 	srand((unsigned int)time(NULL));
+	int ret = 0;
 	
 	while (true) {
 		switch (printStartMenu()) {
@@ -15,7 +16,8 @@ int main() {
 			return 0;
 		case 1:
 			system("cls");
-			thread_main();
+			ret = thread_main();
+			if (ret == 1) printGameOver();
 			break;
 		case 2:
 			system("cls");

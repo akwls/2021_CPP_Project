@@ -29,6 +29,8 @@ fstream file;
 std::condition_variable cv;
 std::mutex cv_m;
 
+int gameover = 0;
+
 
 void print_life() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
@@ -41,8 +43,7 @@ void print_life() {
 		string data = name + "/" + to_string(getScore()) + "/";
 		file.write(data.c_str(), data.size());
 		file.close();
-		printGameOver();
-		
+		gameover = 1;
 	}
 	for (int i = 0; i < life; i++) {
 		gotoxy(x, 1);
@@ -63,10 +64,11 @@ void getName() {
 }
 
 condition_variable g_controller;
-void thread_main() {
+int thread_main() {
 	getName();
 	mutex g_mutex;
 	life = 3;
+	gameover = 0;
 	bEnded = false;
 	setScore();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
@@ -138,20 +140,9 @@ void thread_main() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 	cout << "▶◎◀";
 
-	/*
-	thread t1(thread_move, ref(my_x), ref(my_y), ref(key));
-	thread t2(thread_monster, ref(key), monster);
-	thread t3(thread_shoot, ref(my_x), ref(my_y), ref(key), monster);
-
-	t1.join();
-	t2.join();
-	t3.join();
-	*/
-	
 	thread thread_monster([&]() {
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
-			unique_lock<std::mutex> lk(cv_m);
 			for (int i = 0; i < MAX_MONSTER; i++) {
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
@@ -163,22 +154,19 @@ void thread_main() {
 				}
 			}
 			monster[rand() % MAX_MONSTER]->move();
-			Sleep(150);
+			Sleep(100);
 		}
 	});
 
 	// unique_lock<std::mutex> lock(g_mutex);
 	// int current_y[MAX_MONSTER];
 	int shoot_x;
-	while(true) {
+	while(!gameover) {
 		CursorView(0);
+		
 		//g_controller.notify_one();
 		key = _getch();
-		if (life <= 0) {
-			bEnded = true;
-			thread_monster.join();
-			if (printGameOver() == 0) return;
-		}
+		
 		switch (key) {
 		case RIGHT:
 			if (my_x >= 2 && my_x < 97) {
@@ -207,8 +195,7 @@ void thread_main() {
 		case 27:
 			bEnded = true;
 			thread_monster.join();
-			system("cls");
-			return;
+			return 0;
 		case 32:
 			shoot_x = my_x + 1;
 			for (int i = my_y - 1; i > 1; i--) {
@@ -239,6 +226,11 @@ void thread_main() {
 		default:
 			break;
 		}
+		if (gameover == 1) {
+			bEnded = true;
+			thread_monster.join();
+			return 1;
+		}
 	}
-	return;
+	return 0;
 }
