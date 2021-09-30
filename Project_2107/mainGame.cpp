@@ -10,7 +10,7 @@ using namespace std;
 #define LEFT   75      // 좌측방향키 
 #define RIGHT  77      // 우측방향키 
 #define UP     72      // 위쪽방향키 
-#define DOWN   80      // 아래방향키
+#define DOWN   80      // 아래방향키 
 #define END 40
 #define Y_END 50
 #define X_END 100
@@ -27,7 +27,8 @@ string name = "";
 ifstream fin;
 fstream file;
 std::condition_variable cv;
-std::mutex cv_m;
+std::mutex g_mutex;
+
 
 int gameover = 0;
 
@@ -63,10 +64,8 @@ void getName() {
 	system("cls");
 }
 
-condition_variable g_controller;
 int thread_main() {
 	getName();
-	mutex g_mutex;
 	life = 3;
 	gameover = 0;
 	bEnded = false;
@@ -141,13 +140,14 @@ int thread_main() {
 	cout << "▶◎◀";
 
 	thread thread_monster([&]() {
+		std::unique_lock<std::mutex> lock(g_mutex);
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
 			for (int i = 0; i < MAX_MONSTER; i++) {
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
 					monster[i] = new Small_Monster();
-					monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand()%3);
+					monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
 					monster[i]->print();
 					life--;
 					print_life();
@@ -161,6 +161,7 @@ int thread_main() {
 	// unique_lock<std::mutex> lock(g_mutex);
 	// int current_y[MAX_MONSTER];
 	int shoot_x;
+	
 	while(!gameover) {
 		CursorView(0);
 		
@@ -200,7 +201,7 @@ int thread_main() {
 			shoot_x = my_x + 1;
 			for (int i = my_y - 1; i > 1; i--) {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-				main_gotoxy(shoot_x, i-1);
+				main_gotoxy(shoot_x, i - 1);
 				cout << "♠";
 				main_gotoxy(shoot_x, i);
 				cout << " ";
@@ -221,6 +222,7 @@ int thread_main() {
 				//g_mutex.unlock();
 				Sleep(5);
 			}
+			main_gotoxy(shoot_x, 2); cout << " ";
 			// g_controller.notify_one();
 			break;
 		default:

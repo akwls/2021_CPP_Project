@@ -26,26 +26,35 @@ void printRanking() {
 	gotoxy(25, 15); cout << "===========================================================================";
 	string data;
 	string name[5];
-	int score[5];
+	int score[5] = { 0, };
 	int print_y = 17;
-	for (int i = 0; i < 5; i++) {
-		getline(f, data, '/');
-		name[i] = data;
-		getline(f, data, '/');
-		score[i] = atoi(data.c_str());
-	}
+	int cnt = 1;
+	int g_score;
+	string g_name;
+	getline(f, data, '/');
+	name[0] = data;
+	getline(f, data, '/');
+	score[0] = atoi(data.c_str());
 
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5 - i-1; j++) {
-			if (score[j] < score[j + 1]) {
-				int tmp = score[j];
-				score[j] = score[j + 1];
-				score[j + 1] = tmp;
-				string t = name[i];
-				name[j] = name[j + 1];
-				name[j + 1] = t;
+
+	while(!f.eof()) {
+		getline(f, data, '/');
+		g_name = data;
+		getline(f, data, '/');
+		g_score = atoi(data.c_str());
+
+		for (int i = 0; i < 5; i++) {
+			if (g_score >= score[i]) {
+				for (int j = 4; j > i; j--) {
+					score[j] = score[j-1];
+					name[j] = name[j-1];
+				}
+				score[i] = g_score;
+				name[i] = g_name;
+				break;
 			}
 		}
+		
 	}
 
 	for (int i = 0; i < 5; i++) {
@@ -58,8 +67,6 @@ void printRanking() {
 			cout << "---------------------------------------------------------------------------";
 
 		}
-		
-
 	}
 	f.close();
 	
