@@ -24,17 +24,17 @@ int printStartMenu() {
 	gotoxy(61, 18); cout << "/\\__/ /| |_ | (_| || |   ";
 	gotoxy(61, 19); cout << "\\____/  \\__| \\__,_||_|   ";
 
-	gotoxy(66, 25);
-	cout << "1. 게임 시작";
-	gotoxy(66, 26);
-	cout << "2. 게임 방법";
-	gotoxy(66, 27);
-	cout << "3. 순위 보기";
-	gotoxy(66, 28);
-	cout << "4. 게임 종료";
+	gotoxy(68, 25);
+	cout << "게임 시작";
+	gotoxy(68, 26);
+	cout << "게임 방법";
+	gotoxy(68, 27);
+	cout << "순위 보기";
+	gotoxy(68, 28);
+	cout << "게임 종료";
 
 	char key;
-	int x = 62;
+	int x = 64;
 	int y = 25;
 	gotoxy(x, y);
 	cout << ">> ";
