@@ -70,7 +70,6 @@ void printRanking() {
 	}
 	f.close();
 	
-
 	gotoxy(0, 40); cout << "<< 뒤로 가려면 [ESC] 키를 눌러주세요...    ";
 	while (true) {
 		key = _getch();
