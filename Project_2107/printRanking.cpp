@@ -22,11 +22,11 @@ void printRanking() {
 	gotoxy(60, 9);  cout << "| |   | (_| || | | ||   < ";
 	gotoxy(60, 10); cout << "|_|    \\__,_||_| |_||_|\\_\\";
 
-	gotoxy(25, 14); cout << "순위\t\t\t이름\t\t\t\t\t\t점수";
-	gotoxy(25, 15); cout << "===========================================================================";
+	gotoxy(35, 14); cout << "순위\t\t\t이름\t\t\t\t\t\t점수";
+	gotoxy(35, 15); cout << "===========================================================================";
 	string data;
-	string name[5];
-	int score[5] = { 0, };
+	string name[10];
+	int score[10] = { 0, };
 	int print_y = 17;
 	int cnt = 1;
 	int g_score;
@@ -43,9 +43,9 @@ void printRanking() {
 		getline(f, data, '/');
 		g_score = atoi(data.c_str());
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			if (g_score >= score[i]) {
-				for (int j = 4; j > i; j--) {
+				for (int j = 9; j > i; j--) {
 					score[j] = score[j-1];
 					name[j] = name[j-1];
 				}
@@ -57,20 +57,20 @@ void printRanking() {
 		
 	}
 
-	for (int i = 0; i < 5; i++) {
-		gotoxy(25, print_y++);
+	for (int i = 0; i < 10; i++) {
+		gotoxy(35, print_y++);
 		if (name[i] != "" && score[i] != 0) {
 			cout << i + 1 << "\t\t\t";
 			cout << name[i] + "\t\t\t\t\t\t";
 			cout << score[i];
-			gotoxy(25, print_y++);
+			gotoxy(35, print_y++);
 			cout << "---------------------------------------------------------------------------";
 
 		}
 	}
 	f.close();
 	
-	gotoxy(0, 40); cout << "<< 뒤로 가려면 [ESC] 키를 눌러주세요...    ";
+	gotoxy(0, 43); cout << "<< 뒤로 가려면 [ESC] 키를 눌러주세요...    ";
 	while (true) {
 		key = _getch();
 		if (key == 27) return;
