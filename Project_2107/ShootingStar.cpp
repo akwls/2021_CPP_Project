@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-	system("mode con cols=150 lines=50 | title Shooting Star★!!!!");
+	system("mode con cols=150 lines=50 | title SHOOTING STAR★★★★★★");
 	srand((unsigned int)time(NULL));
 	int ret = 0;
 	

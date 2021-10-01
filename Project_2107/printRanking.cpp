@@ -31,18 +31,21 @@ void printRanking() {
 	int cnt = 1;
 	int g_score;
 	string g_name;
+
+	// 최초 입력받기
 	getline(f, data, '/');
 	name[0] = data;
 	getline(f, data, '/');
 	score[0] = atoi(data.c_str());
 
-
+	// 파일이 끝날때까지
 	while(!f.eof()) {
 		getline(f, data, '/');
 		g_name = data;
 		getline(f, data, '/');
 		g_score = atoi(data.c_str());
 
+		// 점수를 읽고 배열에 삽입정렬하기
 		for (int i = 0; i < 10; i++) {
 			if (g_score >= score[i]) {
 				for (int j = 9; j > i; j--) {
@@ -57,6 +60,7 @@ void printRanking() {
 		
 	}
 
+	// 랭킹 출력
 	for (int i = 0; i < 10; i++) {
 		gotoxy(35, print_y++);
 		if (name[i] != "" && score[i] != 0) {

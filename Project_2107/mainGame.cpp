@@ -21,25 +21,22 @@ using namespace std;
 #define START_Y 45
 #define MAX_MONSTER 5
 
-int life = 3;
-bool bEnded = false;
-string name = "";
-ifstream fin;
-fstream file;
+int life = 3; // 생명
+bool bEnded = false; // 몬스터 스레드 정지를 위한 변수
+string name = ""; // 게임 시작시 입력받는 이름
+fstream file; // 파일에 이름과 점수를 입력하기 위한 파일 변수
 std::condition_variable cv;
 std::mutex g_mutex;
 
+int gameover = 0; // 생명이 모두 닳았을 때 1로 바꾸기
 
-int gameover = 0;
-
-
-void print_life() {
+void print_life() { // 생명 출력 함수
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 	int x = X_END + 3;
 	gotoxy(x, 1);
 	cout << "                  ";
 	if (life <= 0) {
-		bEnded = true;
+		bEnded = true; // 몬스터 함수 종료
 		file.open("ranking.txt", ios_base::app | ios_base::in);
 		string data = name + "/" + to_string(getScore()) + "/";
 		file.write(data.c_str(), data.size());
@@ -54,7 +51,7 @@ void print_life() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 }
 
-void getName() {
+void getName() { // 게임 시작시 이름 입력받는 함수
 	system("cls");
 	CursorView(1);
 	gotoxy(30, 25);
@@ -65,11 +62,14 @@ void getName() {
 }
 
 int thread_main() {
-	getName();
+	getName(); // 이름 입력받는 함수 호출
+	// 게임시 필요한 변수 초기화
 	life = 3;
 	gameover = 0;
 	bEnded = false;
 	setScore();
+
+	// SCORE 글씨 출력
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
 	gotoxy(110, 15);
 	cout << " ___   ___   ___   _ __   ___ ";
@@ -82,6 +82,7 @@ int thread_main() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	printScore(0);
 
+	// 색깔별 점수 출력
 	gotoxy(110, 23);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
 	cout << "■";
@@ -98,7 +99,7 @@ int thread_main() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	cout << " : 7점";
 	
-
+	// 게임판 경계선 출력
 	for (int i = 1; i <= X_END; i++) {
 		gotoxy(i, 0);
 		cout << "-";
@@ -115,19 +116,22 @@ int thread_main() {
 		gotoxy(i, Y_END - 1);
 		cout << "-";
 	}
+
+	// 생명 출력
 	print_life();
 
 	int my_x = 44, my_y = 45, i = 0;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
-	for (int i = 2; i < X_END - 1; i++) {
+	for (int i = 2; i < X_END - 1; i++) { // 몬스터 닿으면 죽는 경계션 출력
 		gotoxy(i, START_Y + 1);
 		cout << "◆";
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	char key;
 
-	CursorView(0);
+	CursorView(0); // 커서 안보이게
 
+	// 최초 몬스터 생성
 	Small_Monster* monster[MAX_MONSTER];
 	for (int i = 0; i < MAX_MONSTER; i++) {
 		monster[i] = new Small_Monster();
@@ -139,22 +143,23 @@ int thread_main() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 	cout << "▶◎◀";
 
-	thread thread_monster([&]() {
-		std::unique_lock<std::mutex> lock(g_mutex);
+	thread thread_monster([&]() { // 몬스터 내려오는 함수
+		// std::unique_lock<std::mutex> lock(g_mutex);
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
 			for (int i = 0; i < MAX_MONSTER; i++) {
+				// 경계선에 닿았는지 체크
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
 					monster[i] = new Small_Monster();
 					monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
 					monster[i]->print();
-					life--;
+					life--; // 생명 감소
 					print_life();
 				}
 			}
-			monster[rand() % MAX_MONSTER]->move();
-			Sleep(100);
+			monster[rand() % MAX_MONSTER]->move(); // 몬스터 배열 중 랜덤으로 내려올 몬스터 지정
+			Sleep(100); // 0.1초마다 반복
 		}
 	});
 
@@ -162,9 +167,8 @@ int thread_main() {
 	// int current_y[MAX_MONSTER];
 	int shoot_x;
 	
-	while(!gameover) {
+	while(!gameover) { // 목숨이 남아있을 때까지 반복
 		CursorView(0);
-		
 		//g_controller.notify_one();
 		key = _getch();
 		
@@ -193,13 +197,13 @@ int thread_main() {
 				//g_mutex.unlock();
 			}
 			break;
-		case 27:
+		case 27: // ESC
 			bEnded = true;
 			thread_monster.join();
 			return 0;
-		case 32:
+		case 32: // SPACE BAR
 			shoot_x = my_x + 1;
-			for (int i = my_y - 1; i > 1; i--) {
+			for (int i = my_y - 1; i > 1; i--) { // 캐릭터 위치부터 게임판 경계선까지
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 				main_gotoxy(shoot_x, i - 1);
 				cout << "♠";
@@ -207,7 +211,7 @@ int thread_main() {
 				cout << " ";
 				// g_mutex.lock();
 				for (int j = 0; j < MAX_MONSTER; j++) {
-					if (shoot_x == monster[j]->x && i == monster[j]->y -1) {
+					if (shoot_x == monster[j]->x && i == monster[j]->y -1) { // 총은 쏜 x좌표와 일치하는 몬스터와 총알이 닿았을 때
 						delete monster[j];
 						monster[j] = new Small_Monster();
 						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
