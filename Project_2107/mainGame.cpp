@@ -224,6 +224,9 @@ int thread_main() {
 				cout << "¢¼";
 				main_gotoxy(shoot_x, i);
 				cout << " ";
+				if (i % 10 == 0) {
+					monster[rand()%MAX_MONSTER]->move();
+				}
 				// g_mutex.lock();
 				int j = 0;
 				for (j = 0; j < MAX_MONSTER; j++) {
