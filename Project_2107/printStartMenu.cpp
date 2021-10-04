@@ -8,7 +8,7 @@ using namespace std;
 int printStartMenu() {
 	system("cls");
 	CursorView(1);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	gotoxy(50, 6); cout << " _____  _                    _    _               ";
 	gotoxy(50, 7); cout << "/  ___|| |                  | |  (_)              ";
 	gotoxy(50, 8); cout << "\\ `--. | |__    ___    ___  | |_  _  _ __    __ _ ";

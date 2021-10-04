@@ -5,7 +5,7 @@
 #include <thread>
 void printScript() {
 	int key;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	gotoxy(46, 2);  cout << " _   _                 _         ______ _            ___  ";
 	gotoxy(46, 3); cout << "| | | |               | |        | ___ \\ |          |__ \\ ";
 	gotoxy(46, 4); cout << "| |_| | _____      __ | |_ ___   | |_/ / | __ _ _   _  ) |";
@@ -22,9 +22,9 @@ void printScript() {
 	printf("\t\"롤리\"의 젤리를 쏘아서 몬스터들을 물리치자!\n\n\n\n");
 	printf("\t[게임 플레이 방법]\n\n");
 	printf("\t위에서 사탕 몬스터들이 내려옵니다!\n\n");
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
 	printf("\t←, → 화살표로 롤리를 움직이고 스페이스바를 눌러 젤리를 쏘아주세요!!!!\n");
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	printf("\t몬스터의 색깔에 따라 점수는 달라집니다. 점수는 게임 플레이 화면 우측을 확인하세요.\n");
 	printf("\t젤리를 맞은 몬스터는 사라지고 새로운 몬스터가 내려옵니다.\n\n\n\n");
 	printf("\t[생명]\n\n");

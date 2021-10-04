@@ -9,7 +9,7 @@ using namespace std;
 
 int printGameOver() {
 	CursorView(1);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	system("cls");
 	gotoxy(60, 15);
 	cout << " _____   ___  ___  ___ _____ ";

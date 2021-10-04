@@ -14,7 +14,7 @@ void printRanking() {
 	fstream file;
 	ifstream f("ranking.txt");
 	int key;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	gotoxy(60, 5);  cout << "                     _    ";
 	gotoxy(60, 6);  cout << "                    | |   ";
 	gotoxy(60, 7);  cout << " _ __   __ _  _ __  | | __";

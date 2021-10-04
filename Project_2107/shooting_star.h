@@ -1,5 +1,14 @@
 #pragma once
 #include "Small_Monster.h"
+#define WHITE 15
+#define RED 12
+#define GREEN 10
+#define BLUE 1
+#define PINK 13
+#define GREY 8
+#define MINT 11
+#define YELLOW 6
+
 
 void printScript();
 void printRanking();

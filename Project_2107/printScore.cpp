@@ -7,7 +7,7 @@
 static int score;
 
 void printScore(int point) {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	score += point;
 	gotoxy(124, 20);
 	cout << score << "Á¡";
