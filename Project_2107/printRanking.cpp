@@ -7,6 +7,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include<iomanip>
 #include "shooting_star.h"
 using namespace std;
 
@@ -61,11 +62,12 @@ void printRanking() {
 	}
 
 	// ·©Å· Ãâ·Â
+	cout.setf(ios::left);
 	for (int i = 0; i < 10; i++) {
 		gotoxy(35, print_y++);
 		if (name[i] != "" && score[i] != 0) {
 			cout << i + 1 << "\t\t\t";
-			cout << name[i] + "\t\t\t\t\t\t";
+			cout << setw(48) << name[i];
 			cout << score[i];
 			gotoxy(35, print_y++);
 			cout << "---------------------------------------------------------------------------";
