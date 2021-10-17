@@ -19,8 +19,18 @@ using namespace std;
 // 6 => DARK YELLOW
 #define START_X 44
 #define START_Y 45
-#define MAX_MONSTER 5
+#define MAX_MONSTER 10
 
+#define LEVEL_1 100
+#define LEVEL_2 80
+#define LEVEL_3 60
+
+#define LEVEL_1_MONSTER 5
+#define LEVEL_2_MONSTER 8
+#define LEVEL_3_MONSTER 10
+
+int current_monster = 5;
+int speed;
 int life = 3; // 생명
 bool bEnded = false; // 몬스터 스레드 정지를 위한 변수
 string name = ""; // 게임 시작시 입력받는 이름
@@ -30,6 +40,12 @@ std::mutex g_mutex;
 
 int gameover = 0; // 생명이 모두 닳았을 때 1로 바꾸기
 
+void printLevel(int level) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+	gotoxy(110, 30);
+	cout << "현재 레벨 : Level " << level;
+}
+
 void print_life() { // 생명 출력 함수
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
 	int x = X_END + 3;
@@ -37,7 +53,7 @@ void print_life() { // 생명 출력 함수
 	cout << "                  ";
 	if (life <= 0) {
 		bEnded = true; // 몬스터 함수 종료
-		file.open("ranking.txt", ios_base::app | ios_base::in);
+		file.open("../ranking.txt", ios_base::app | ios_base::in);
 		string data = name + "/" + to_string(getScore()) + "/";
 		file.write(data.c_str(), data.size());
 		file.close();
@@ -71,6 +87,7 @@ int thread_main() {
 	getName(); // 이름 입력받는 함수 호출
 	// 게임시 필요한 변수 초기화
 	life = 3;
+	speed = LEVEL_1;
 	gameover = 0;
 	bEnded = false;
 	setScore();
@@ -125,6 +142,8 @@ int thread_main() {
 		cout << "-";
 	}
 
+	printLevel(1);
+
 	// 생명 출력
 	print_life();
 
@@ -140,8 +159,8 @@ int thread_main() {
 	CursorView(0); // 커서 안보이게
 
 	// 최초 몬스터 생성
-	Small_Monster* monster[MAX_MONSTER];
-	for (int i = 0; i < MAX_MONSTER; i++) {
+	Small_Monster* monster[10];
+	for (int i = 0; i < current_monster; i++) {
 		monster[i] = new Small_Monster();
 		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1, rand()%3);
 		monster[i]->print();
@@ -158,7 +177,7 @@ int thread_main() {
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
 			cv.wait(lock, [&]() { return isShoot == 0; });
-			for (int i = 0; i < MAX_MONSTER; i++) {
+			for (int i = 0; i < current_monster; i++) {
 				// 경계선에 닿았는지 체크
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
@@ -169,8 +188,8 @@ int thread_main() {
 					print_life();
 				}
 			}
-			monster[rand() % MAX_MONSTER]->move(); // 몬스터 배열 중 랜덤으로 내려올 몬스터 지정
-			Sleep(100); // 0.1초마다 반복
+			monster[rand() % current_monster]->move(); // 몬스터 배열 중 랜덤으로 내려올 몬스터 지정
+			Sleep(speed); // 0.1초마다 반복
 		}
 	});
 
@@ -182,6 +201,7 @@ int thread_main() {
 	while(!gameover) { // 목숨이 남아있을 때까지 반복
 		CursorView(0);
 		//g_controller.notify_one();
+		
 		key = _getch();
 		cv.notify_one();
 		switch (key) {
@@ -225,13 +245,33 @@ int thread_main() {
 				main_gotoxy(shoot_x, i);
 				cout << " ";
 				if (i % 10 == 0) {
-					monster[rand()%MAX_MONSTER]->move();
+					monster[rand() % current_monster]->move();
 				}
 				// g_mutex.lock();
 				int j = 0;
-				for (j = 0; j < MAX_MONSTER; j++) {
+				for (j = 0; j < current_monster; j++) {
 					if (shoot_x == monster[j]->x && i == monster[j]->y +1) { // 총은 쏜 x좌표와 일치하는 몬스터와 총알이 닿았을 때
 						printScore(monster[j]->score);
+						if (getScore() >= 50 && current_monster != LEVEL_3_MONSTER) {
+							speed = LEVEL_3;
+							current_monster = LEVEL_3_MONSTER;
+							for (int i = LEVEL_2_MONSTER; i < LEVEL_3_MONSTER; i++) {
+								monster[i] = new Small_Monster();
+								monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+								monster[i]->print();
+							}
+							printLevel(3);
+						}
+						else if (getScore() >= 30 && current_monster != LEVEL_2_MONSTER) {
+							speed = LEVEL_2;
+							current_monster = LEVEL_2_MONSTER;
+							for (int i = LEVEL_1_MONSTER; i < LEVEL_2_MONSTER; i++) {
+								monster[i] = new Small_Monster();
+								monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+								monster[i]->print();
+							}
+							printLevel(2);
+						}
 						delete monster[j];
 						monster[j] = new Small_Monster();
 						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);

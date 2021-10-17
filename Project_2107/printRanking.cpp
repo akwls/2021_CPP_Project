@@ -13,7 +13,7 @@ using namespace std;
 
 void printRanking() {
 	fstream file;
-	ifstream f("ranking.txt");
+	ifstream f("../ranking.txt");
 	int key;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	gotoxy(60, 5);  cout << "                     _    ";
@@ -27,7 +27,8 @@ void printRanking() {
 	gotoxy(35, 15); cout << "===========================================================================";
 	string data;
 	string name[10];
-	int score[10] = { 0, };
+	int score[10];
+	for (int i = 0; i < 10; i++) score[i] = -1;
 	int print_y = 17;
 	int cnt = 1;
 	int g_score;
@@ -60,19 +61,19 @@ void printRanking() {
 		}
 		
 	}
-
+	
 	// ·©Å· Ãâ·Â
 	cout.setf(ios::left);
 	for (int i = 0; i < 10; i++) {
-		gotoxy(35, print_y++);
-		if (name[i] != "" && score[i] != 0) {
-			cout << i + 1 << "\t\t\t";
-			cout << setw(48) << name[i];
-			cout << score[i];
-			gotoxy(35, print_y++);
-			cout << "---------------------------------------------------------------------------";
-
+		if (name[i] == "" || score[i] == -1) {
+			continue;
 		}
+		gotoxy(35, print_y++);
+		cout << cnt++ << "\t\t\t";
+		cout << setw(48) << name[i];
+		cout << score[i];
+		gotoxy(35, print_y++);
+		cout << "---------------------------------------------------------------------------";
 	}
 	f.close();
 	
