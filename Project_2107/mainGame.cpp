@@ -159,7 +159,7 @@ int thread_main() {
 	CursorView(0); // 커서 안보이게
 
 	// 최초 몬스터 생성
-	Small_Monster* monster[10];
+	Small_Monster* monster[LEVEL_3_MONSTER];
 	for (int i = 0; i < current_monster; i++) {
 		monster[i] = new Small_Monster();
 		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1, rand()%3);
@@ -171,7 +171,6 @@ int thread_main() {
 	cout << "▶◎◀";
 
 	thread thread_monster([&]() { // 몬스터 내려오는 함수
-		// std::unique_lock<std::mutex> lock(g_mutex);
 		std::unique_lock<std::mutex> lock(g_mutex);
 		
 		while (bEnded == false) // true이면 스레드 실행 종료
@@ -193,43 +192,34 @@ int thread_main() {
 		}
 	});
 
-	// unique_lock<std::mutex> lock(g_mutex);
-	// int current_y[MAX_MONSTER];
 	int shoot_x = 0;
 	cv.notify_one();
 	
 	while(!gameover) { // 목숨이 남아있을 때까지 반복
 		CursorView(0);
-		//g_controller.notify_one();
-		
 		key = _getch();
-		cv.notify_one();
 		switch (key) {
 		case RIGHT:
-			cv.notify_one();
 			if (my_x >= 2 && my_x < 97) {
-				//g_mutex.lock();
 				main_gotoxy(my_x, my_y);
 				printf("   ");
 				my_x += 1;
 				main_gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), YELLOW);
 				printf("▶◎◀");
-				//g_mutex.unlock();
 			}
+			cv.notify_one();
 			break;
 		case LEFT:
-			cv.notify_one();
 			if (my_x > 2 && my_x <= 97) {
-				//g_mutex.lock();
 				main_gotoxy(my_x, my_y);
 				printf("   ");
 				my_x -= 1;
 				main_gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), YELLOW);
 				printf("▶◎◀");
-				//g_mutex.unlock();
 			}
+			cv.notify_one();
 			break;
 		case 27: // ESC
 			bEnded = true;
@@ -247,31 +237,10 @@ int thread_main() {
 				if (i % 10 == 0) {
 					monster[rand() % current_monster]->move();
 				}
-				// g_mutex.lock();
 				int j = 0;
 				for (j = 0; j < current_monster; j++) {
 					if (shoot_x == monster[j]->x && i == monster[j]->y +1) { // 총은 쏜 x좌표와 일치하는 몬스터와 총알이 닿았을 때
 						printScore(monster[j]->score);
-						if (getScore() >= 50 && current_monster != LEVEL_3_MONSTER) {
-							speed = LEVEL_3;
-							current_monster = LEVEL_3_MONSTER;
-							for (int i = LEVEL_2_MONSTER; i < LEVEL_3_MONSTER; i++) {
-								monster[i] = new Small_Monster();
-								monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
-								monster[i]->print();
-							}
-							printLevel(3);
-						}
-						else if (getScore() >= 30 && current_monster != LEVEL_2_MONSTER) {
-							speed = LEVEL_2;
-							current_monster = LEVEL_2_MONSTER;
-							for (int i = LEVEL_1_MONSTER; i < LEVEL_2_MONSTER; i++) {
-								monster[i] = new Small_Monster();
-								monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
-								monster[i]->print();
-							}
-							printLevel(2);
-						}
 						delete monster[j];
 						monster[j] = new Small_Monster();
 						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
@@ -282,13 +251,31 @@ int thread_main() {
 						break;
 					}
 				}
-				//g_mutex.unlock();
 				Sleep(10);
+			}
+			if (getScore() >= 50 && current_monster < LEVEL_3_MONSTER) {
+				speed = LEVEL_3;
+				current_monster = LEVEL_3_MONSTER;
+				for (int k = LEVEL_2_MONSTER; k < LEVEL_3_MONSTER; k++) {
+					monster[k] = new Small_Monster();
+					monster[k]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+					monster[k]->print();
+				}
+				printLevel(3);
+			}
+			else if (getScore() >= 30 && current_monster < LEVEL_2_MONSTER) {
+				speed = LEVEL_2;
+				current_monster = LEVEL_2_MONSTER;
+				for (int k = LEVEL_1_MONSTER; k < LEVEL_2_MONSTER; k++) {
+					monster[k] = new Small_Monster();
+					monster[k]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+					monster[k]->print();
+				}
+				printLevel(2);
 			}
 			main_gotoxy(shoot_x, 1); cout << " ";
 			isShoot = 0;
 			cv.notify_one();
-			
 			break;
 		default:
 			break;
