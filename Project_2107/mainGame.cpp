@@ -21,9 +21,9 @@ using namespace std;
 #define START_Y 45
 #define MAX_MONSTER 10
 
-#define LEVEL_1 100
-#define LEVEL_2 80
-#define LEVEL_3 60
+#define LEVEL_1 80
+#define LEVEL_2 60
+#define LEVEL_3 50
 
 #define LEVEL_1_MONSTER 5
 #define LEVEL_2_MONSTER 8
@@ -81,6 +81,14 @@ void getName() { // 게임 시작시 이름 입력받는 함수
 	cin >> name;
 	CursorView(0);
 	system("cls");
+}
+
+int monster_x_rand() {
+	return rand() % 71 + 10;
+}
+
+int monster_y_rand() {
+	return rand() % 6 + 1;
 }
 
 int thread_main() {
@@ -162,7 +170,7 @@ int thread_main() {
 	Small_Monster* monster[LEVEL_3_MONSTER];
 	for (int i = 0; i < current_monster; i++) {
 		monster[i] = new Small_Monster();
-		monster[i]->setter(rand() % 71 + 10, rand() % 6 + 1, rand()%3);
+		monster[i]->setter(monster_x_rand(), monster_y_rand(), rand()%3);
 		monster[i]->print();
 	}
 
@@ -181,7 +189,7 @@ int thread_main() {
 				if (monster[i]->y >= START_Y) {
 					delete monster[i];
 					monster[i] = new Small_Monster();
-					monster[i]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+					monster[i]->setter(monster_x_rand(), monster_y_rand(), rand() % 3);
 					monster[i]->print();
 					life--; // 생명 감소
 					print_life();
@@ -243,7 +251,7 @@ int thread_main() {
 						printScore(monster[j]->score);
 						delete monster[j];
 						monster[j] = new Small_Monster();
-						monster[j]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+						monster[j]->setter(monster_x_rand(), monster_y_rand(), rand() % 3);
 						monster[j]->print();
 						main_gotoxy(shoot_x, i+1);
 						cout << " ";
@@ -258,7 +266,7 @@ int thread_main() {
 				current_monster = LEVEL_3_MONSTER;
 				for (int k = LEVEL_2_MONSTER; k < LEVEL_3_MONSTER; k++) {
 					monster[k] = new Small_Monster();
-					monster[k]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+					monster[k]->setter(monster_x_rand(), monster_y_rand(), rand() % 3);
 					monster[k]->print();
 				}
 				printLevel(3);
@@ -268,7 +276,7 @@ int thread_main() {
 				current_monster = LEVEL_2_MONSTER;
 				for (int k = LEVEL_1_MONSTER; k < LEVEL_2_MONSTER; k++) {
 					monster[k] = new Small_Monster();
-					monster[k]->setter(rand() % 61 + 20, rand() % 6 + 1, rand() % 3);
+					monster[k]->setter(monster_x_rand(), monster_y_rand(), rand() % 3);
 					monster[k]->print();
 				}
 				printLevel(2);
