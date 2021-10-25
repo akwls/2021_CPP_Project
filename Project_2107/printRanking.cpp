@@ -11,6 +11,9 @@
 #include "shooting_star.h"
 using namespace std;
 
+string name[10];
+int score[10];
+
 void printRanking() {
 	fstream file;
 	ifstream f("../ranking.txt");
@@ -26,8 +29,7 @@ void printRanking() {
 	gotoxy(35, 14); cout << "순위\t\t\t이름\t\t\t\t\t\t점수";
 	gotoxy(35, 15); cout << "===========================================================================";
 	string data;
-	string name[10];
-	int score[10];
+	
 	for (int i = 0; i < 10; i++) score[i] = -1;
 	int print_y = 17;
 	int cnt = 1;

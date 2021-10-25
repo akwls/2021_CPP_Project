@@ -23,6 +23,14 @@ void Small_Monster::setter(int x, int y, int color) {
 		this->color = 8;
 		this->score = 7;
 	}
+	else if (color == 3) {
+		this->color = 11;
+		this->score = 1;
+	}
+	else if (color == 4) {
+		this->color = 14;
+		this->score = 10;
+	}
 }
 
 void Small_Monster::move() {

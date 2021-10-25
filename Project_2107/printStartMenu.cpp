@@ -8,7 +8,7 @@ using namespace std;
 int printStartMenu() {
 	system("cls");
 	CursorView(1);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
 	gotoxy(25, 6);	cout << "   ,-,--.  ,--.-,,-,--,   _,.---._       _,.---._    ,--.--------.  .=-.-..-._            _,---.  ";
 	gotoxy(25, 7);	cout << " ,-.'-  _\\/==/  /|=|  | ,-.' , -  `.   ,-.' , -  `. /==/,  -   , -\\/==/_ /==/ \\  .-._ _.='.'-,  \\   ";
 	gotoxy(25, 8);	cout << "/==/_ ,_.'|==|_ ||=|, |/==/_,  ,  - \\ /==/_,  ,  - \\\\==\\.-.  - ,-./==|, ||==|, \\/ /, /==.'-     /  ";
@@ -18,6 +18,8 @@ int printStartMenu() {
 	gotoxy(25, 12); cout << "/==/\\/ _ ||==|   .-. ,\\\\==\\ -    ,_ / \\==\\ -    ,_ /      |==|, | |==|- ||==|  /\\ , \\==\\-  ,    (   ";
 	gotoxy(25, 13); cout << "\\==\\ - , //==/, //=/  | '.='. -   .'   '.='. -   .'       /==/ -/ /==/. //==/, | |- |/==/ _  ,  /    ";
 	gotoxy(25, 14); cout << " `--`---' `--`-' `-`--`   `--`--''       `--`--''         `--`--` `--`-` `--`./  `--``--`------'   ";
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
 	gotoxy(48, 16); cout << "   ,-,--.  ,--.--------.   ,---.                   ";
 	gotoxy(48, 17); cout << " ,-.'-  _\\/==/,  -   , -\\.--.'  \\      .-.,.---.  ";
 	gotoxy(48, 18); cout << "/==/_ ,_.'\\==\\.-.  - ,-./\\==\\-/\\ \\    /==/  `   \\  ";
@@ -28,6 +30,9 @@ int printStartMenu() {
 	gotoxy(48, 23); cout << "\\==\\ - , /      /==/ -/ \\==\\ _.\\=\\.-'/==/  /\\ ,  ) ";
 	gotoxy(48, 24); cout << " `--`---'       `--`--`  `--`        `--`-`--`--'  ";
 
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+	gotoxy(64, 26);
+	cout << "☆ ★ 슈팅 스타 ☆ ★ ";
 	gotoxy(68, 30);
 	cout << "게임 시작";
 	gotoxy(68, 31);
