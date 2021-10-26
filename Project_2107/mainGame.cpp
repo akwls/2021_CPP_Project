@@ -23,7 +23,7 @@ using namespace std;
 
 #define LEVEL_1 80
 #define LEVEL_2 60
-#define LEVEL_3 50
+#define LEVEL_3 40
 
 #define LEVEL_1_MONSTER 5
 #define LEVEL_2_MONSTER 8
@@ -260,6 +260,7 @@ int thread_main() {
 			for (int i = 0; i < current_monster; i++) {
 				// 경계선에 닿았는지 체크
 				if (monster[i]->y >= START_Y) {
+					PlaySound(TEXT("../minus_life.wav"), 0, SND_FILENAME | SND_ASYNC);
 					delete monster[i];
 					monster[i] = new Small_Monster();
 					monster[i]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
@@ -335,7 +336,7 @@ int thread_main() {
 				cout << "♠";
 				main_gotoxy(shoot_x, i);
 				cout << " ";
-				if (i % 10 == 0) {
+				if (i % (40/current_monster) == 0) {
 					monster[rand() % current_monster]->move();
 				}
 				int j = 0;
