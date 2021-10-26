@@ -4,8 +4,10 @@
 #include <thread>
 #include <mutex>
 #include <fstream>
+#include <mmsystem.h>
 #include "shooting_star.h"
 using namespace std;
+#pragma comment(lib,"winmm.lib")
 
 #define LEFT   75      // 좌측방향키 
 #define RIGHT  77      // 우측방향키 
@@ -324,6 +326,7 @@ int thread_main() {
 			thread_monster.join();
 			return 0;
 		case 32: // SPACE BAR
+			PlaySound(TEXT("../jelly_sound.wav"), 0, SND_FILENAME | SND_ASYNC);
 			shoot_x = my_x + 1;
 			isShoot = 1;
 			for (int i = my_y - 1; i > 1; i--) { // 캐릭터 위치부터 게임판 경계선까지
@@ -354,6 +357,9 @@ int thread_main() {
 					while (rand1 == rand2) {
 						rand2 = rand() % current_monster;
 					}
+
+					printScore(monster[rand1]->score);
+					printScore(monster[rand2]->score);
 
 					delete monster[rand1];
 					delete monster[rand2];
