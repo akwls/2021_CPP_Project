@@ -3,7 +3,9 @@
 #include <Windows.h>
 #include <conio.h>
 #include <thread>
+#include <mmsystem.h>
 using namespace std;
+#pragma comment(lib,"winmm.lib")
 
 int printStartMenu() {
 	system("cls");
@@ -71,8 +73,6 @@ int printStartMenu() {
 		case 13:
 			return y - 29;
 		}
-		
-		
 	}
 	return 0;
 }

@@ -42,7 +42,7 @@ int gameover = 0; // 생명이 모두 닳았을 때 1로 바꾸기
 
 void printLevel(int level) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
-	gotoxy(110, 32);
+	gotoxy(110, 34);
 	cout << "현재 레벨 : Level " << level;
 }
 
@@ -129,6 +129,7 @@ public:
 int thread_main() {
 	getName(); // 이름 입력받는 함수 호출
 	// 게임시 필요한 변수 초기화
+	PlaySound(NULL, 0, 0);
 	life = 3;
 	speed = LEVEL_1;
 	gameover = 0;
@@ -242,7 +243,7 @@ int thread_main() {
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
 			cv.wait(lock, [&]() { return isShoot == 0; });
-			int rand_bonus = rand() % 200;
+			int rand_bonus = rand() % 300;
 			if (getScore() % 200 == rand_bonus && bonus.isShown == false) {
 				bonus.setter(monster_x_rand(), rand() % 11 + 20);
 				bonus.print();
@@ -250,7 +251,7 @@ int thread_main() {
 				bonus.current_score = getScore();
 			}
 
-			int rand_mDelete = rand() % 200;
+			int rand_mDelete = rand() % 400;
 			if (getScore() % 200 == rand_mDelete && mDelete.isShown == false) {
 				mDelete.setter(monster_x_rand(), rand() % 11 + 20);
 				mDelete.print();
@@ -291,6 +292,7 @@ int thread_main() {
 	});
 
 	int shoot_x = 0;
+	
 	
 	while(!gameover) { // 목숨이 남아있을 때까지 반복
 		CursorView(0);
@@ -390,6 +392,7 @@ int thread_main() {
 				Sleep(10);
 			}
 			if (getScore() >= 80 && current_monster < LEVEL_3_MONSTER) {
+				PlaySound(TEXT("../levelup.wav"), 0, SND_FILENAME | SND_ASYNC);
 				speed = LEVEL_3;
 				current_monster = LEVEL_3_MONSTER;
 				for (int k = LEVEL_2_MONSTER; k < LEVEL_3_MONSTER; k++) {
@@ -400,6 +403,7 @@ int thread_main() {
 				printLevel(3);
 			}
 			else if (getScore() >= 50 && current_monster < LEVEL_2_MONSTER) {
+				PlaySound(TEXT("../levelup.wav"), 0, SND_FILENAME | SND_ASYNC);
 				speed = LEVEL_2;
 				current_monster = LEVEL_2_MONSTER;
 				for (int k = LEVEL_1_MONSTER; k < LEVEL_2_MONSTER; k++) {

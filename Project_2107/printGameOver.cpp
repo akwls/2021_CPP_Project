@@ -2,12 +2,14 @@
 #include <Windows.h>
 #include <conio.h>
 #include <thread>
+#include <mmsystem.h>
 #include "shooting_star.h"
 #include "Small_Monster.h"
 using namespace std;
-
+#pragma comment(lib,"winmm.lib")
 
 int printGameOver() {
+	PlaySound(TEXT("../gameover.wav"), 0, SND_FILENAME | SND_ASYNC);
 	CursorView(1);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	system("cls");
