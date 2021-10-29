@@ -37,6 +37,7 @@ string name = ""; // 게임 시작시 입력받는 이름
 fstream file; // 파일에 이름과 점수를 입력하기 위한 파일 변수
 std::condition_variable cv;
 std::mutex g_mutex;
+Small_Monster* monster[LEVEL_3_MONSTER];
 
 int gameover = 0; // 생명이 모두 닳았을 때 1로 바꾸기
 
@@ -47,7 +48,6 @@ void printLevel(int level) {
 }
 
 void print_life() { // 생명 출력 함수
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
 	int x = X_END + 3;
 	gotoxy(x, 1);
 	cout << "                  ";
@@ -59,6 +59,7 @@ void print_life() { // 생명 출력 함수
 		file.close();
 		gameover = 1;
 	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
 	for (int i = 0; i < life; i++) {
 		gotoxy(x, 1);
 		cout << "♥ ";
@@ -93,43 +94,130 @@ int monster_y_rand() {
 	return rand() % 6 + 1;
 }
 
-class bonus_life {
+int isItemShown = 0;
+int current_item = 0;
+
+class Item {
 public:
 	int x, y;
-	void print() {
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
-		gotoxy(x, y);
-		cout << "♥";
-	}
-	void setter(int x, int y) {
+	int color;
+	int current_score;
+	virtual void print() {
+		gotoxy(110, 38);
+		cout << "print 테스트";
+	};
+	virtual void func() {
+		gotoxy(110, 38);
+		cout << "func 테스트";
+	};
+	virtual void setter(int x, int y) {
 		this->x = x;
 		this->y = y;
 	}
-	bool isShown = false;
-	int current_score;
+};
+
+class bonus_life : public Item {
+public:
+	void print() {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+		shoot_gotoxy(x, y);
+		cout << "♥";
+	}
+	void func() {
+		gotoxy(this->x, this->y);
+		cout << " ";
+		isItemShown = 0;
+		life++;
+		print_life();
+		gotoxy(110, 37);
+		cout << "생명 테스트";
+	}
 };
 
 
-class monster_delete_2 {
+class monster_delete_2 : public Item {
 public:
-	int x, y;
 	void print() {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
-		gotoxy(x, y);
+		shoot_gotoxy(x, y);
 		cout << "○";
 	}
-	void setter(int x, int y) {
-		this->x = x;
-		this->y = y;
+	void func() {
+		gotoxy(this->x, this->y);
+		cout << " ";
+		isItemShown = 0;
+
+		int rand1 = rand() % current_monster;
+		int rand2 = rand() % current_monster;
+		while (rand1 == rand2) {
+			rand2 = rand() % current_monster;
+		}
+
+		printScore(monster[rand1]->score);
+		printScore(monster[rand2]->score);
+
+		delete monster[rand1];
+		delete monster[rand2];
+
+		Sleep(500);
+		monster[rand1] = new Small_Monster();
+		monster[rand1]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
+		monster[rand1]->print();
+		monster[rand2] = new Small_Monster();
+		monster[rand2]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
+		monster[rand2]->print();
+
+		gotoxy(110, 37);
+		cout << "삭제 테스트";
 	}
-	bool isShown = false;
-	int current_score;
+};
+
+class monster_to_10 : public Item {
+public:
+	void print() {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+		shoot_gotoxy(x, y);
+		cout << "@";
+	}
+	void func() {
+		gotoxy(this->x, this->y);
+		cout << " ";
+		isItemShown = 0;
+		for (int k = 0; k < current_monster; k++) {
+			monster[k]->color = 14;
+			monster[k]->score = 10;
+		}
+		gotoxy(110, 37);
+		cout << "10점 테스트";
+	}
+};
+
+class monster_to_1 : public Item {
+public:
+	void print() {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+		shoot_gotoxy(x, y);
+		cout << "@";
+	}
+	void func() {
+		gotoxy(this->x, this->y);
+		cout << " ";
+		isItemShown = 0;
+		for (int k = 0; k < current_monster; k++) {
+			monster[k]->color = 11;
+			monster[k]->score = 1;
+		}
+		gotoxy(110, 37);
+		cout << "1점 테스트";
+	}
+
 };
 
 int thread_main() {
 	getName(); // 이름 입력받는 함수 호출
 	// 게임시 필요한 변수 초기화
 	PlaySound(NULL, 0, 0);
+	PlaySound(TEXT("../start.wav"), 0, SND_FILENAME | SND_ASYNC);
 	life = 3;
 	speed = LEVEL_1;
 	gameover = 0;
@@ -139,6 +227,10 @@ int thread_main() {
 	int isShoot = 0;
 	bonus_life bonus;
 	monster_delete_2 mDelete;
+	monster_to_10 to10;
+	monster_to_1 to1;
+	Item *item[4] = { &bonus, &mDelete, &to10, &to1 };
+	
 	current_monster = LEVEL_1_MONSTER;
 
 	// SCORE 글씨 출력
@@ -190,6 +282,16 @@ int thread_main() {
 	cout << "♥";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	cout << " : 생명 1개 회복";
+	gotoxy(110, 29);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+	cout << "@";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+	cout << " : 모든 몬스터 1점으로 만들기";
+	gotoxy(110, 30);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+	cout << "@";
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+	cout << " : 모든 몬스터 10점으로 만들기";
 	
 	// 게임판 경계선 출력
 	for (int i = 1; i <= X_END; i++) {
@@ -226,10 +328,9 @@ int thread_main() {
 	CursorView(0); // 커서 안보이게
 
 	// 최초 몬스터 생성
-	Small_Monster* monster[LEVEL_3_MONSTER];
 	for (int i = 0; i < current_monster; i++) {
 		monster[i] = new Small_Monster();
-		monster[i]->setter(monster_x_rand(), monster_y_rand(), rand()%5);
+		monster[i]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
 		monster[i]->print();
 	}
 
@@ -243,21 +344,7 @@ int thread_main() {
 		while (bEnded == false) // true이면 스레드 실행 종료
 		{
 			cv.wait(lock, [&]() { return isShoot == 0; });
-			int rand_bonus = rand() % 300;
-			if (getScore() % 200 == rand_bonus && bonus.isShown == false) {
-				bonus.setter(monster_x_rand(), rand() % 11 + 20);
-				bonus.print();
-				bonus.isShown = true;
-				bonus.current_score = getScore();
-			}
-
-			int rand_mDelete = rand() % 400;
-			if (getScore() % 200 == rand_mDelete && mDelete.isShown == false) {
-				mDelete.setter(monster_x_rand(), rand() % 11 + 20);
-				mDelete.print();
-				mDelete.isShown = true;
-				mDelete.current_score = getScore();
-			}
+			
 			for (int i = 0; i < current_monster; i++) {
 				// 경계선에 닿았는지 체크
 				if (monster[i]->y >= START_Y) {
@@ -271,22 +358,16 @@ int thread_main() {
 				}
 			}
 			monster[rand() % current_monster]->move(); // 몬스터 배열 중 랜덤으로 내려올 몬스터 지정
-			if (bonus.isShown == true) {
-				bonus.print();
-				if (getScore() > bonus.current_score + 30) {
-					gotoxy(bonus.x, bonus.y);
+			/*
+			if (isItemShown == 1) {
+				item[current_item]->print();
+				if (item[current_item]->current_score + 30 < getScore()) {
+					gotoxy(item[current_item]->x, item[current_item]->y);
 					cout << " ";
-					bonus.isShown = false;
+					isItemShown = 0;
 				}
 			}
-			if (mDelete.isShown == true) {
-				mDelete.print();
-				if (getScore() > mDelete.current_score + 30) {
-					gotoxy(mDelete.x, mDelete.y);
-					cout << " ";
-					mDelete.isShown = false;
-				}
-			}
+			*/
 			Sleep(speed); // 0.1초마다 반복
 		}
 	});
@@ -296,13 +377,22 @@ int thread_main() {
 	
 	while(!gameover) { // 목숨이 남아있을 때까지 반복
 		CursorView(0);
+		int rand_item = rand() % 10;
+		if (rand_item == getScore() % 10 && isItemShown == 0) {
+			int rand_index = rand() % 4;
+			current_item = rand_index;
+			item[rand_index]->setter(monster_x_rand(), rand() % 11 + 20);
+			item[rand_index]->print();
+			isItemShown = 1;
+			item[rand_index]->current_score = getScore();
+		}
 		key = _getch();
 		switch (key) {
 		case RIGHT:
 			isShoot = 1;
 			if (my_x >= 2 && my_x < 97) {
 				main_gotoxy(my_x, my_y);
-				printf("   ");
+				printf("         ");
 				my_x += 1;
 				main_gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), YELLOW);
@@ -315,7 +405,7 @@ int thread_main() {
 			isShoot = 1;
 			if (my_x > 2 && my_x <= 97) {
 				main_gotoxy(my_x, my_y);
-				printf("   ");
+				printf("           ");
 				my_x -= 1;
 				main_gotoxy(my_x, my_y);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), YELLOW);
@@ -342,38 +432,11 @@ int thread_main() {
 					monster[rand() % current_monster]->move();
 				}
 				int j = 0;
-				if (shoot_x == bonus.x && i == bonus.y + 1 && bonus.isShown == true) {
-					gotoxy(bonus.x, bonus.y);
+				if (shoot_x == item[current_item]->x && i == item[current_item]->y + 1 && isItemShown == 1) {
+					item[current_item]->func();
+					gotoxy(shoot_x, i+1);
 					cout << " ";
-					bonus.isShown = false;
-					life++;
-					print_life();
-					break;
-				}
-				if (shoot_x == mDelete.x && i == mDelete.y + 1 && mDelete.isShown == true) {
-					gotoxy(mDelete.x, mDelete.y);
-					cout << " ";
-					mDelete.isShown = false;
-
-					int rand1 = rand() % current_monster;
-					int rand2 = rand() % current_monster;
-					while (rand1 == rand2) {
-						rand2 = rand() % current_monster;
-					}
-
-					printScore(monster[rand1]->score);
-					printScore(monster[rand2]->score);
-
-					delete monster[rand1];
-					delete monster[rand2];
-
-					Sleep(500);
-					monster[rand1] = new Small_Monster();
-					monster[rand1]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
-					monster[rand1]->print();
-					monster[rand2] = new Small_Monster();
-					monster[rand2]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
-					monster[rand2]->print();
+					isItemShown = 0;
 					break;
 				}
 				for (j = 0; j < current_monster; j++) {
@@ -425,6 +488,7 @@ int thread_main() {
 			thread_monster.join();
 			return 1;
 		}
+		
 		cv.notify_one();
 	}
 	return 0;

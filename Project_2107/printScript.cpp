@@ -26,6 +26,7 @@ void printScript() {
 	printf("\t←, → 화살표로 롤리를 움직이고 스페이스바를 눌러 젤리를 쏘아주세요!!!!\n");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	printf("\t몬스터의 색깔에 따라 점수는 달라집니다. 점수는 게임 플레이 화면 우측을 확인하세요.\n");
+	printf("\t무작위로 나타나는 아이템들을 맞춰보세요! 좋은걸까, 나쁜걸까?\n");
 	printf("\t젤리를 맞은 몬스터는 사라지고 새로운 몬스터가 내려옵니다.\n\n\n\n");
 	printf("\t[생명]\n\n");
 	printf("\t몬스터가 파란선 밑으로 내려오면 생명이 깎이게 됩니다. 주어진 생명은 3개!\n");
