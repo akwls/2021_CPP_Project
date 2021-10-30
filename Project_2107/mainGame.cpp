@@ -103,12 +103,10 @@ public:
 	int color;
 	int current_score;
 	virtual void print() {
-		gotoxy(110, 38);
-		cout << "print 테스트";
+		
 	};
 	virtual void func() {
-		gotoxy(110, 38);
-		cout << "func 테스트";
+		
 	};
 	virtual void setter(int x, int y) {
 		this->x = x;
@@ -129,8 +127,6 @@ public:
 		isItemShown = 0;
 		life++;
 		print_life();
-		gotoxy(110, 37);
-		cout << "생명 테스트";
 	}
 };
 
@@ -167,8 +163,6 @@ public:
 		monster[rand2]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
 		monster[rand2]->print();
 
-		gotoxy(110, 37);
-		cout << "삭제 테스트";
 	}
 };
 
@@ -187,8 +181,6 @@ public:
 			monster[k]->color = 14;
 			monster[k]->score = 10;
 		}
-		gotoxy(110, 37);
-		cout << "10점 테스트";
 	}
 };
 
@@ -207,8 +199,6 @@ public:
 			monster[k]->color = 11;
 			monster[k]->score = 1;
 		}
-		gotoxy(110, 37);
-		cout << "1점 테스트";
 	}
 
 };
@@ -358,16 +348,7 @@ int thread_main() {
 				}
 			}
 			monster[rand() % current_monster]->move(); // 몬스터 배열 중 랜덤으로 내려올 몬스터 지정
-			/*
-			if (isItemShown == 1) {
-				item[current_item]->print();
-				if (item[current_item]->current_score + 30 < getScore()) {
-					gotoxy(item[current_item]->x, item[current_item]->y);
-					cout << " ";
-					isItemShown = 0;
-				}
-			}
-			*/
+			
 			Sleep(speed); // 0.1초마다 반복
 		}
 	});
@@ -419,9 +400,9 @@ int thread_main() {
 			thread_monster.join();
 			return 0;
 		case 32: // SPACE BAR
+			isShoot = 1;
 			PlaySound(TEXT("../jelly_sound.wav"), 0, SND_FILENAME | SND_ASYNC);
 			shoot_x = my_x + 1;
-			isShoot = 1;
 			for (int i = my_y - 1; i > 1; i--) { // 캐릭터 위치부터 게임판 경계선까지
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 				main_gotoxy(shoot_x, i - 1);
@@ -439,18 +420,19 @@ int thread_main() {
 					isItemShown = 0;
 					break;
 				}
-				for (j = 0; j < current_monster; j++) {
-					if (shoot_x == monster[j]->x && i == monster[j]->y +1) { // 총은 쏜 x좌표와 일치하는 몬스터와 총알이 닿았을 때
-						printScore(monster[j]->score);
-						delete monster[j];
-						monster[j] = new Small_Monster();
-						monster[j]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
-						monster[j]->print();
-						main_gotoxy(shoot_x, i+1);
-						cout << " ";
-						i = -1;
-						break;
-					}
+				else 
+					for (j = 0; j < current_monster; j++) {
+						if (shoot_x == monster[j]->x && i == monster[j]->y +1) { // 총은 쏜 x좌표와 일치하는 몬스터와 총알이 닿았을 때
+							printScore(monster[j]->score);
+							delete monster[j];
+							monster[j] = new Small_Monster();
+							monster[j]->setter(monster_x_rand(), monster_y_rand(), rand() % 5);
+							monster[j]->print();
+							main_gotoxy(shoot_x, i+1);
+							cout << " ";
+							i = -1;
+							break;
+						}
 				}
 				Sleep(10);
 			}
